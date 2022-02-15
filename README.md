@@ -20,7 +20,27 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In order to be able to call the API, you'll first need to set your Application ID and API Key:
+
+```ruby
+TravelTime.configure do |config|
+  config.application_id = '<your app id>'
+  config.api_key = '<your api key>'
+end
+```
+
+After that, you can instantiate a client to initiate the API connection:
+
+```ruby
+client = TimeTravel::Client.new
+```
+
+You can then use the clint to call API endpoints:
+
+```ruby
+response = client.map_info
+#=> 
+```
 
 ## Development
 
