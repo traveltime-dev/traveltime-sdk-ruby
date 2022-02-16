@@ -8,8 +8,10 @@ module TravelTime
   class Client
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
 
+    attr_reader :connection
+
     def initialize
-      @conn = Faraday.new(API_BASE_URL) do |f|
+      @connection = Faraday.new(API_BASE_URL) do |f|
         f.request :json
         f.response :raise_error if TravelTime.config.raise_on_failure
         f.response :logger if TravelTime.config.enable_logging
@@ -34,7 +36,7 @@ module TravelTime
     end
 
     def map_info
-      perform_request { @conn.get('map-info') }
+      perform_request { connection.get('map-info') }
     end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'travel_time'
+require 'dry/configurable/test_interface'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -12,4 +13,14 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.before(:all) do
+    TravelTime.reset_config
+  end
+end
+
+# Enable the test interface for the TravelTime module to
+# allow calling `reset_config` on it.
+module TravelTime
+  enable_test_interface
 end
