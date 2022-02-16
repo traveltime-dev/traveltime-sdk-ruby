@@ -2,15 +2,20 @@
 
 require 'dry/configurable'
 require 'travel_time/client'
+require 'travel_time/error'
+require 'travel_time/response'
 require 'travel_time/version'
 
 # Main TravelTime module
 module TravelTime
   extend Dry::Configurable
 
-  setting :http_adapter
+  # Authentication
   setting :application_id
   setting :api_key
 
-  class Error < StandardError; end
+  # HTTP Client
+  setting :http_adapter
+  setting :enable_logging, default: false
+  setting :raise_on_failure, default: false
 end

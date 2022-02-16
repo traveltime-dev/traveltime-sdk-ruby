@@ -39,7 +39,7 @@ You can then use the clint to call API endpoints:
 
 ```ruby
 response = client.map_info
-#=> 
+#=> #<TravelTime::Response:0x00000001452e94b0 @status=200, @headers={...}, @body={...}
 ```
 
 ## Development

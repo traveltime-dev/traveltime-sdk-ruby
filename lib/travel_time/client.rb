@@ -5,30 +5,36 @@ require 'travel_time/middleware/authentication'
 
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
-  #
-  # @usage
-  #   credentials = {}
-  #   client = TravelTime::Client.new(credentials)
-  #   client.map_info
   class Client
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
 
     def initialize
       @conn = Faraday.new(API_BASE_URL) do |f|
         f.request :json
-        f.response :logger
+        f.response :raise_error if TravelTime.config.raise_on_failure
+        f.response :logger if TravelTime.config.enable_logging
         f.response :json
         f.use TravelTime::Middleware::Authentication
         f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
       end
     end
 
-    def map_info
-      unwrap(@conn.get('map-info'))
+    def unwrap(response)
+      Response.from_object(response)
     end
 
-    def unwrap(response)
-      response.body
+    def perform_request
+      unwrap(yield)
+    rescue Faraday::Error => e
+      raise TravelTime::Error, response: Response.from_hash(e.response) if e.response
+
+      raise TravelTime::Error, message: e.message
+    rescue StandardError => e
+      raise TravelTime::Error, message: e.message
+    end
+
+    def map_info
+      perform_request { @conn.get('map-info') }
     end
   end
 end
