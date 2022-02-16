@@ -23,7 +23,7 @@ module TravelTime
       )
     end
 
-    def initialize(status:, headers:, body:)
+    def initialize(status: nil, headers: nil, body: nil)
       @status = status
       @headers = headers
       @body = body
