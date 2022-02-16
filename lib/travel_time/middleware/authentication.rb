@@ -14,10 +14,6 @@ module TravelTime
         env.request_headers[APP_ID_HEADER] = TravelTime.config.application_id
         env.request_headers[API_KEY_HEADER] = TravelTime.config.api_key
       end
-
-      def map_info
-        @conn.get('map-info')
-      end
     end
   end
 end
