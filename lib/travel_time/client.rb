@@ -28,11 +28,11 @@ module TravelTime
     def perform_request
       unwrap(yield)
     rescue Faraday::Error => e
-      raise TravelTime::Error, response: Response.from_hash(e.response) if e.response
+      raise TravelTime::Error.new(response: Response.from_hash(e.response)) if e.response
 
-      raise TravelTime::Error, message: e.message
+      raise TravelTime::Error.new(message: e.message)
     rescue StandardError => e
-      raise TravelTime::Error, message: e.message
+      raise TravelTime::Error.new(message: e.message)
     end
 
     def map_info
