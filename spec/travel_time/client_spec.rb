@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TravelTime::Client do
-  let(:connection) { described_class.new.connection }
+  let(:client) { described_class.new }
+  let(:connection) { client.connection }
 
   it 'defaults to API v4' do
     expect(described_class::API_BASE_URL).to end_with('v4/')
@@ -59,5 +60,13 @@ RSpec.describe TravelTime::Client do
         expect(connection.builder.handlers).to include(Faraday::Response::RaiseError)
       end
     end
+  end
+
+  describe '#map_info' do
+    subject(:response) { client.map_info }
+
+    let(:url) { "#{described_class::API_BASE_URL}map-info" }
+
+    it_behaves_like 'an endpoint method'
   end
 end

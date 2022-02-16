@@ -1,7 +1,17 @@
 # frozen_string_literal: true
 
+require 'simplecov'
+
+SimpleCov.start do
+  minimum_coverage 100
+  minimum_coverage_by_file 100
+end
+
 require 'travel_time'
 require 'dry/configurable/test_interface'
+require 'webmock/rspec'
+
+Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -14,7 +24,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.before(:all) do
+  config.before do
     TravelTime.reset_config
   end
 end
