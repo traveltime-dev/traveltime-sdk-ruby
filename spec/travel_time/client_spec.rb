@@ -76,7 +76,7 @@ RSpec.describe TravelTime::Client do
     end
 
     describe '#geocoding' do
-      subject(:response) { client.geocoding(params) }
+      subject(:response) { client.geocoding(**params) }
 
       let(:url) { "#{described_class::API_BASE_URL}geocoding/search" }
       let(:params) { { query: 'London' } }
