@@ -5,11 +5,17 @@ module TravelTime
   class Error < StandardError
     DEFAULT_MESSAGE = 'Error while processing the request'
 
-    attr_reader :response
+    attr_reader :response, :wrapped_exception
 
-    def initialize(response: nil, message: nil)
+    def initialize(message = nil, response: nil, exception: nil)
       @response = response
-      super(message || @response&.body&.[]('description') || DEFAULT_MESSAGE)
+      @wrapped_exception = exception
+      exc = super(parse_message(message))
+      exc.set_backtrace(exception.backtrace) unless exception.nil?
+    end
+
+    def parse_message(message)
+      message || wrapped_exception&.message || response&.body&.[]('description') || DEFAULT_MESSAGE
     end
   end
 end

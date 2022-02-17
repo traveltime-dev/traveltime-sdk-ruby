@@ -13,3 +13,9 @@ AllCops:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10

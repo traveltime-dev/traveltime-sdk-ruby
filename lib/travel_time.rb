@@ -18,4 +18,7 @@ module TravelTime
   setting :http_adapter
   setting :enable_logging, default: false
   setting :raise_on_failure, default: false
+
+  # Response preferences
+  setting :parse_geo_json, default: true
 end

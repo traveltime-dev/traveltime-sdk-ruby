@@ -32,5 +32,10 @@ module TravelTime
     def success?
       (200..299).cover?(status)
     end
+
+    def parse_geo_json
+      parsed = RGeo::GeoJSON.decode(@body)
+      @body = parsed if parsed
+    end
   end
 end

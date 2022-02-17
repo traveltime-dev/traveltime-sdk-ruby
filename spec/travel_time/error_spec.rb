@@ -32,7 +32,7 @@ RSpec.describe TravelTime::Error do
   end
 
   context 'when initialized with a message' do
-    let(:exception) { described_class.new(message: message) }
+    let(:exception) { described_class.new(message) }
 
     it 'uses the message' do
       expect(exception.message).to eq(message)
@@ -40,7 +40,7 @@ RSpec.describe TravelTime::Error do
   end
 
   context 'when initialized with both a response and a message' do
-    let(:exception) { described_class.new(response: response, message: message) }
+    let(:exception) { described_class.new(message, response: response) }
 
     it 'the message takes priority over the description in the response body' do
       expect(exception.message).to eq(message)

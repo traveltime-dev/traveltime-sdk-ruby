@@ -62,11 +62,58 @@ RSpec.describe TravelTime::Client do
     end
   end
 
-  describe '#map_info' do
-    subject(:response) { client.map_info }
+  describe 'API Endpoints' do
+    before { stub }
 
-    let(:url) { "#{described_class::API_BASE_URL}map-info" }
+    describe '#map_info' do
+      subject(:response) { client.map_info }
 
-    it_behaves_like 'an endpoint method'
+      let(:url) { "#{described_class::API_BASE_URL}map-info" }
+      let(:success_response) { { body: '' } }
+      let(:stub) { stub_request(:get, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#geocoding' do
+      subject(:response) { client.geocoding(params) }
+
+      let(:url) { "#{described_class::API_BASE_URL}geocoding/search" }
+      let(:params) { { query: 'London' } }
+      let(:success_response) do
+        {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.dump({
+                            type: 'FeatureCollection',
+                            features: []
+                          })
+        }
+      end
+      let(:stub) do
+        stub_request(:get, url)
+          .with(query: params)
+      end
+
+      it_behaves_like 'an endpoint method'
+
+      context 'with default configuration' do
+        before { stub.to_return(success_response) }
+
+        it 'returns a GeoJSON parsed body' do
+          expect(response.body).to be_a(RGeo::GeoJSON::FeatureCollection)
+        end
+      end
+
+      context 'with parse_geo_json config disabled' do
+        before do
+          TravelTime.config.parse_geo_json = false
+          stub.to_return(success_response)
+        end
+
+        it 'returns a Hash body' do
+          expect(response.body).to be_a(Hash)
+        end
+      end
+    end
   end
 end

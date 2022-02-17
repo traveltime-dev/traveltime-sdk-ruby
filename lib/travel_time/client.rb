@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'rgeo/geo_json'
 require 'travel_time/middleware/authentication'
 
 module TravelTime
@@ -30,13 +31,26 @@ module TravelTime
     rescue Faraday::Error => e
       raise TravelTime::Error.new(response: Response.from_hash(e.response)) if e.response
 
-      raise TravelTime::Error.new(message: e.message)
+      raise TravelTime::Error.new(exception: e)
     rescue StandardError => e
-      raise TravelTime::Error.new(message: e.message)
+      raise TravelTime::Error.new(exception: e)
     end
 
     def map_info
       perform_request { connection.get('map-info') }
+    end
+
+    def geocoding(query:, within_country: nil, exclude: nil, limit: nil, force_postcode: nil)
+      payload = {
+        query: query,
+        'within.country': within_country,
+        'exclude.location.types': exclude,
+        limit: limit,
+        'force.add.postcode': force_postcode
+      }.compact!
+      response = perform_request { connection.get('geocoding/search', payload) }
+      response.parse_geo_json if response.success? && TravelTime.config.parse_geo_json
+      response
     end
   end
 end
