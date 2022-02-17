@@ -31,11 +31,13 @@ jobs:
   build:
     needs: [ linting ]
     runs-on: ubuntu-latest
-    name: build ${{ matrix.ruby }}
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/.gemfiles/${{ matrix.gemfile }}.gemfile
     strategy:
       fail-fast: false
       matrix:
         ruby: [ '2.7', '3.0', '3.1' ]
+        gemfile: [ 'faraday-1', 'faraday-2' ]
 
     steps:
       - uses: actions/checkout@v2
