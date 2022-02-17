@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby/releases'
 
   spec.add_dependency 'dry-configurable', '~> 0.14.0'
-  spec.add_dependency 'faraday', '>= 1.9', '< 3.0'
+  spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
 
   # Specify which files should be added to the gem when it is released.
   spec.files = Dir['{bin,lib}/**/*', 'LICENSE.md', 'Rakefile', 'README.md']
