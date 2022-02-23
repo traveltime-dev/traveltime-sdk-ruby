@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'dry-configurable', '~> 0.14.0'
   spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
-  spec.add_dependency 'rgeo-geojson', '~> 2.0'
 
   # Specify which files should be added to the gem when it is released.
   spec.files = Dir['{bin,lib}/**/*', 'LICENSE.md', 'Rakefile', 'README.md']

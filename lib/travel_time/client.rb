@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'faraday'
-require 'rgeo/geo_json'
 require 'travel_time/middleware/authentication'
 
 module TravelTime
@@ -48,9 +47,7 @@ module TravelTime
         limit: limit,
         'force.add.postcode': force_postcode
       }.compact!
-      response = perform_request { connection.get('geocoding/search', payload) }
-      response.parse_geo_json if response.success? && TravelTime.config.parse_geo_json
-      response
+      perform_request { connection.get('geocoding/search', payload) }
     end
   end
 end

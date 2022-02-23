@@ -95,25 +95,6 @@ RSpec.describe TravelTime::Client do
       end
 
       it_behaves_like 'an endpoint method'
-
-      context 'with default configuration' do
-        before { stub.to_return(success_response) }
-
-        it 'returns a GeoJSON parsed body' do
-          expect(response.body).to be_a(RGeo::GeoJSON::FeatureCollection)
-        end
-      end
-
-      context 'with parse_geo_json config disabled' do
-        before do
-          TravelTime.config.parse_geo_json = false
-          stub.to_return(success_response)
-        end
-
-        it 'returns a Hash body' do
-          expect(response.body).to be_a(Hash)
-        end
-      end
     end
   end
 end
