@@ -5,7 +5,7 @@ require 'travel_time/middleware/authentication'
 
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
-  class Client
+  class Client # rubocop:disable Metrics/ClassLength
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
 
     attr_reader :connection
