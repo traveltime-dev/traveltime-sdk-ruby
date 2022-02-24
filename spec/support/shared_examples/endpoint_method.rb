@@ -2,7 +2,7 @@
 
 RSpec.shared_examples 'an endpoint method' do
   context 'when request is successful' do
-    before { stub.to_return(**success_response) }
+    before { stub }
 
     it 'returns a response object' do
       expect(response).to be_a(TravelTime::Response)

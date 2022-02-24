@@ -69,30 +69,97 @@ RSpec.describe TravelTime::Client do
       subject(:response) { client.map_info }
 
       let(:url) { "#{described_class::API_BASE_URL}map-info" }
-      let(:success_response) { { body: '' } }
       let(:stub) { stub_request(:get, url) }
 
       it_behaves_like 'an endpoint method'
     end
 
+    describe '#supported_locations' do
+      subject(:response) { client.supported_locations(locations: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}supported-locations" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
     describe '#geocoding' do
-      subject(:response) { client.geocoding(**params) }
+      subject(:response) { client.geocoding(query: 'London') }
 
       let(:url) { "#{described_class::API_BASE_URL}geocoding/search" }
-      let(:params) { { query: 'London' } }
-      let(:success_response) do
-        {
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.dump({
-                            type: 'FeatureCollection',
-                            features: []
-                          })
-        }
-      end
-      let(:stub) do
-        stub_request(:get, url)
-          .with(query: params)
-      end
+      let(:stub) { stub_request(:get, url).with(query: { query: 'London' }) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#reverse_geocoding' do
+      subject(:response) { client.reverse_geocoding(lat: 51.507281, lng: -0.132120) }
+
+      let(:url) { "#{described_class::API_BASE_URL}geocoding/reverse" }
+      let(:stub) { stub_request(:get, url).with(query: { lat: 51.507281, lng: -0.132120 }) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_map' do
+      subject(:response) { client.time_map }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-map" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_filter' do
+      subject(:response) { client.time_filter(locations: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-filter" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_filter_fast' do
+      subject(:response) { client.time_filter_fast(locations: [], arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-filter/fast" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_filter_postcodes' do
+      subject(:response) { client.time_filter_postcodes(arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-filter/postcodes" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_filter_postcode_districts' do
+      subject(:response) { client.time_filter_postcode_districts(arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-filter/postcode-districts" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#time_filter_postcode_sectors' do
+      subject(:response) { client.time_filter_postcode_sectors(arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-filter/postcode-sectors" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#routes' do
+      subject(:response) { client.routes(locations: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}routes" }
+      let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
     end
