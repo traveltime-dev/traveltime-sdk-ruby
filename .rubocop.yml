@@ -10,6 +10,10 @@ AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
 
+# Disabling until TravelTime Rubygems account is MFA-protected.
+Gemspec/RequireMFA:
+  Enabled: false
+
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
