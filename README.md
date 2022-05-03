@@ -1,5 +1,9 @@
 # TravelTime Ruby SDK
 
+[![Gem Version](https://badge.fury.io/rb/travel_time.svg)](https://rubygems.org/gems/travel_time)
+[![GitHub Actions CI](https://github.com/traveltime-dev/traveltime-sdk-ruby/workflows/CI/badge.svg)](https://github.com/traveltime-dev/traveltime-sdk-ruby/actions?query=workflow%3ACI)
+
+
 This open-source library allows you to access [TravelTime API](http://docs.traveltime.com/overview/introduction)
 endpoints.
 
