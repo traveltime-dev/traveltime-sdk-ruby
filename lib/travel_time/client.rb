@@ -50,7 +50,7 @@ module TravelTime
         'exclude.location.types': exclude,
         limit: limit,
         'force.add.postcode': force_postcode
-      }.compact!
+      }.compact
       perform_request { connection.get('geocoding/search', query) }
     end
 
@@ -60,7 +60,7 @@ module TravelTime
         lng: lng,
         'within.country': within_country,
         'exclude.location.types': exclude
-      }.compact!
+      }.compact
       perform_request { connection.get('geocoding/reverse', query) }
     end
 
@@ -70,7 +70,7 @@ module TravelTime
         arrival_searches: arrival_searches,
         unions: unions,
         intersections: intersections
-      }.compact!
+      }.compact
       perform_request { connection.post('time-map', payload) }
     end
 
@@ -79,7 +79,7 @@ module TravelTime
         locations: locations,
         departure_searches: departure_searches,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('time-filter', payload) }
     end
 
@@ -87,7 +87,7 @@ module TravelTime
       payload = {
         locations: locations,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('time-filter/fast', payload) }
     end
 
@@ -95,7 +95,7 @@ module TravelTime
       payload = {
         departure_searches: departure_searches,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('time-filter/postcodes', payload) }
     end
 
@@ -103,7 +103,7 @@ module TravelTime
       payload = {
         departure_searches: departure_searches,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('time-filter/postcode-districts', payload) }
     end
 
@@ -111,7 +111,7 @@ module TravelTime
       payload = {
         departure_searches: departure_searches,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('time-filter/postcode-sectors', payload) }
     end
 
@@ -120,7 +120,7 @@ module TravelTime
         locations: locations,
         departure_searches: departure_searches,
         arrival_searches: arrival_searches
-      }.compact!
+      }.compact
       perform_request { connection.post('routes', payload) }
     end
   end
