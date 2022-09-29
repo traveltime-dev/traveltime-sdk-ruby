@@ -4,7 +4,7 @@
 [![GitHub Actions CI](https://github.com/traveltime-dev/traveltime-sdk-ruby/workflows/CI/badge.svg)](https://github.com/traveltime-dev/traveltime-sdk-ruby/actions?query=workflow%3ACI)
 
 
-This open-source library allows you to access [TravelTime API](http://docs.traveltime.com/overview/introduction)
+This open-source library allows you to access [TravelTime API](https://docs.traveltime.com/overview/introduction)
 endpoints.
 
 ## Installation
