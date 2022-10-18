@@ -26,3 +26,6 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/Rails/HaveHttpStatus:
   Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
