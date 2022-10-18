@@ -50,7 +50,7 @@ module TravelTime
         'exclude.location.types': exclude,
         limit: limit,
         'force.add.postcode': force_postcode,
-        bounds: bounds ? bounds.join(',') : bounds
+        bounds: bounds ? bounds.join(',') : nil
       }.compact
       perform_request { connection.get('geocoding/search', query) }
     end
