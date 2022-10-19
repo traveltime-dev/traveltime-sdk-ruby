@@ -37,7 +37,7 @@ end
 After that, you can instantiate a client to initiate the API connection:
 
 ```ruby
-client = TimeTravel::Client.new
+client = TravelTime::Client.new
 ```
 
 You can then use the clint to call API endpoints:
