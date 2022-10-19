@@ -40,7 +40,7 @@ After that, you can instantiate a client to initiate the API connection:
 client = TravelTime::Client.new
 ```
 
-You can then use the clint to call API endpoints:
+You can then use the client to call API endpoints:
 
 ```ruby
 response = client.map_info
