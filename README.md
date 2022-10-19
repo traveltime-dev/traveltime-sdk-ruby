@@ -387,13 +387,6 @@ Currently only supports United Kingdom.
 ```ruby
 require 'time'
 
-TravelTime.configure do |config|
-  config.application_id = 'YOUR_API_ID'
-  config.api_key = 'YOUR_API_KEY'
-end
-
-client = TravelTime::Client.new
-
 departure_search = {
   id: 'public transport from Trafalgar Square',
   departure_time: Time.now.iso8601,
