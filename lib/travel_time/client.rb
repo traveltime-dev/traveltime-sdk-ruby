@@ -65,14 +65,14 @@ module TravelTime
       perform_request { connection.get('geocoding/reverse', query) }
     end
 
-    def time_map(departure_searches: nil, arrival_searches: nil, unions: nil, intersections: nil)
+    def time_map(departure_searches: nil, arrival_searches: nil, unions: nil, intersections: nil, format: nil)
       payload = {
         departure_searches: departure_searches,
         arrival_searches: arrival_searches,
         unions: unions,
         intersections: intersections
       }.compact
-      perform_request { connection.post('time-map', payload) }
+      perform_request { connection.post('time-map', payload, { 'Accept' => format }) }
     end
 
     def time_filter(locations:, departure_searches: nil, arrival_searches: nil)
