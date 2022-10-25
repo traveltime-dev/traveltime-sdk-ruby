@@ -72,7 +72,7 @@ module TravelTime
         unions: unions,
         intersections: intersections
       }.compact
-      perform_request { connection.post('time-map', payload, {'Accept' => format}) }
+      perform_request { connection.post('time-map', payload, { 'Accept' => format }) }
     end
 
     def time_filter(locations:, departure_searches: nil, arrival_searches: nil)
