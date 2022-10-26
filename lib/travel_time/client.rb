@@ -43,11 +43,13 @@ module TravelTime
       perform_request { connection.post('supported-locations', { locations: locations }) }
     end
 
-    def geocoding(query:, within_country: nil, exclude: nil, limit: nil, force_postcode: nil, bounds: nil)
+    def geocoding(query:, within_country: nil, format_name: nil, exclude: nil, limit: nil, force_postcode: nil,
+                  bounds: nil)
       query = {
         query: query,
         'within.country': within_country,
-        'exclude.location.types': exclude,
+        'format.name': format_name,
+        'format.exclude.country': exclude,
         limit: limit,
         'force.add.postcode': force_postcode,
         bounds: bounds ? bounds.join(',') : nil
