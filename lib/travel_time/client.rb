@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'google/protobuf'
 require 'travel_time/middleware/authentication'
+require 'travel_time/middleware/proto'
+require 'travel_time/proto/utils'
+require 'travel_time/proto/v2/TimeFilterFastRequest_pb'
+require 'travel_time/proto/v2/TimeFilterFastResponse_pb'
+require 'travel_time/proto/v2/RequestsCommon_pb'
 
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
@@ -85,11 +91,41 @@ module TravelTime
     end
 
     def time_filter_fast(locations:, arrival_searches:)
-      payload = {
-        locations: locations,
-        arrival_searches: arrival_searches
-      }.compact
+      connection
+        .payload = {
+          locations: locations,
+          arrival_searches: arrival_searches
+        }.compact
       perform_request { connection.post('time-filter/fast', payload) }
+    end
+
+    # make :
+    def time_filter_fast_proto(country, origin, destinations, transport, traveltime)
+      base_uri = 'http://proto.api.traveltimeapp.com/api/v2/'
+      proto_client = Faraday.new(base_uri) do |f|
+        f.response :raise_error if TravelTime.config.raise_on_failure
+        f.response :logger if TravelTime.config.enable_logging
+        f.use TravelTime::Middleware::ProtoMiddleware
+        f.adapter :net_http
+      end
+
+      message = Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest.new(
+        oneToManyRequest: Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::OneToMany.new(
+          departureLocation: origin,
+          locationDeltas: ProtoUtils.build_deltas(origin, destinations),
+          transportation: Com::Igeolise::Traveltime::Rabbitmq::Requests::Transportation.new(
+            { type: ProtoUtils.get_proto_transport_code(transport) }
+          ),
+          arrivalTimePeriod: 0,
+          travelTime: traveltime,
+          properties: nil
+        )
+      )
+
+      serialized = Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest.encode(message)
+      proto_response = proto_client.post("#{country}/time-filter/fast/#{transport}", serialized)
+      # TODO: decode and send back as response
+      Com::Igeolise::Traveltime::Rabbitmq::Responses::TimeFilterFastResponse.decode(proto_response).to_h
     end
 
     def time_filter_postcodes(departure_searches: nil, arrival_searches: nil)

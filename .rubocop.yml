@@ -9,6 +9,8 @@ AllCops:
   DisplayStyleGuide: true
   TargetRubyVersion: 2.7
   NewCops: enable
+  Excludes:
+    - lib/travel_time/proto/v2/*.rb
 
 # Disabling until TravelTime Rubygems account is MFA-protected.
 Gemspec/RequireMFA:
