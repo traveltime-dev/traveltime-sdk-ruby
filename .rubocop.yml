@@ -9,7 +9,8 @@ AllCops:
   DisplayStyleGuide: true
   TargetRubyVersion: 2.7
   NewCops: enable
-  Excludes:
+  Exclude: 
+    - spec/*.rb
     - lib/travel_time/proto/v2/*.rb
 
 # Disabling until TravelTime Rubygems account is MFA-protected.
@@ -26,8 +27,7 @@ RSpec/NestedGroups:
 RSpec/MultipleMemoizedHelpers:
   Max: 10
 
-RSpec/Rails/HaveHttpStatus:
-  Enabled: false
-
 Metrics/ParameterLists:
+  Enabled: false
+RSpec/Rails/HaveHttpStatus:
   Enabled: false

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'travel_time/proto/utils'
 
 module TravelTime
   # The Response class represent an API response.
@@ -12,6 +13,14 @@ module TravelTime
         status: response.status,
         headers: response.headers,
         body: response.body
+      )
+    end
+
+    def self.from_object_proto(response)
+      new(
+        status: response.status,
+        headers: response.headers,
+        body: ProtoUtils.decode_proto_response(response.body)
       )
     end
 
