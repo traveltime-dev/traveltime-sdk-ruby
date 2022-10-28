@@ -23,13 +23,13 @@ module TravelTime
       init_proto_connection
     end
 
-    def init_proto_connection
+    def init_proto_connection # rubocop:disable Metrics/AbcSize
       @proto_connection = Faraday.new do |f|
-        f.response :raise_error if TravelTime.config.raise_on_failure
-        f.response :logger if TravelTime.config.enable_logging
         f.headers['Content-Type'] = 'application/octet-stream'
         f.headers['Accept'] = 'application/octet-stream'
         f.request :authorization, :basic, TravelTime.config.application_id, TravelTime.config.api_key
+        f.response :raise_error if TravelTime.config.raise_on_failure
+        f.response :logger if TravelTime.config.enable_logging
         f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
       end
     end
