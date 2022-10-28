@@ -13,6 +13,7 @@ AllCops:
     - spec/*.rb
     - lib/travel_time/proto/v2/*.rb
     - vendor/**/*.rb
+    - gemfiles/vendor/bundle/**/*
 
 # Disabling until TravelTime Rubygems account is MFA-protected.
 Gemspec/RequireMFA:
