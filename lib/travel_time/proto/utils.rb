@@ -7,14 +7,14 @@ require 'travel_time/proto/v2/TimeFilterFastResponse_pb'
 module TravelTime
   # Utilities for encoding/decoding protobuf requests
   class ProtoUtils
-    def self.encode_fixed_poiunt(source, target)
+    def self.encode_fixed_point(source, target)
       ((target - source) * 10.pow(5)).round
     end
 
     def self.build_deltas(departure, destinations)
       deltas = destinations.map do |destination|
-        [encode_fixed_poiunt(departure[:lat], destination[:lat]),
-         encode_fixed_poiunt(departure[:lng], destination[:lng])]
+        [encode_fixed_point(departure[:lat], destination[:lat]),
+         encode_fixed_point(departure[:lng], destination[:lng])]
       end
       deltas.flatten
     end
