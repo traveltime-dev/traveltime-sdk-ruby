@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'faraday'
-require 'travel_time/proto/utils'
 
 module TravelTime
   # The Response class represent an API response.
