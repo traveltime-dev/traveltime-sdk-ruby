@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'faraday'
-require 'google/protobuf'
 require 'travel_time/middleware/authentication'
 require 'travel_time/middleware/proto'
 require 'travel_time/proto/utils'
@@ -109,11 +108,10 @@ module TravelTime
     end
 
     def time_filter_fast(locations:, arrival_searches:)
-      connection
-        .payload = {
-          locations: locations,
-          arrival_searches: arrival_searches
-        }.compact
+      payload = {
+        locations: locations,
+        arrival_searches: arrival_searches
+      }.compact
       perform_request { connection.post('time-filter/fast', payload) }
     end
 
