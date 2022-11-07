@@ -125,6 +125,15 @@ module TravelTime
       end
     end
 
+    def time_filter_fast_proto_distance(country:, origin:, destinations:, transport:, traveltime:)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport, traveltime, properties: [1])
+      payload = ProtoUtils.encode_proto_message(message)
+      perform_request_proto do
+        proto_connection.post("https://proto-with-distance.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}",
+                              payload)
+      end
+    end
+
     def time_filter_postcodes(departure_searches: nil, arrival_searches: nil)
       payload = {
         departure_searches: departure_searches,
