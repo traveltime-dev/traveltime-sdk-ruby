@@ -5,6 +5,7 @@ require 'travel_time/client'
 require 'travel_time/error'
 require 'travel_time/response'
 require 'travel_time/version'
+require 'travel_time/proto/utils'
 
 # Main TravelTime module
 module TravelTime

@@ -310,6 +310,75 @@ response = client.time_filter_fast(
 puts response.body
 ```
 
+### [Time Filter (Fast) Proto](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
+A fast version of time filter communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
+
+The request parameters are much more limited and only travel time is returned. In addition, the results are only approximately correct (95% of the results are guaranteed to be within 5% of the routes returned by regular time filter).
+
+This inflexibility comes with a benefit of faster response times (Over 5x faster compared to regular time filter) and larger limits on the amount of destination points.
+
+Body attributes:
+* origin: Origin point.
+* destinations: Destination points. Cannot be more than 200,000.
+* transport: Transportation type.
+* travelTime: Time limit;
+* country: Return the results that are within the specified country
+
+```ruby
+origin = {
+  lat: 51.508930,
+  lng: -0.131387,
+}
+
+destinations = [{
+  lat: 51.508824,
+  lng: -0.167093,
+}]
+
+response = client.time_filter_fast_proto(
+  country: 'UK',
+  origin: origin,
+  destinations: destinations,
+  transport: 'driving+ferry',
+  traveltime: 7200
+)
+puts(response.body)
+```
+
+### Time Filter (Fast) Proto Distance
+A version of `Time Filter (Fast) Proto` endpoint that also returns distance information. Request parameters are even more limited than `Time Filter (Fast) Proto`.
+
+This endpoint is not enabled by default, please [contact us](https://traveltime.com/contact-us) if you wish to obtain access. 
+
+Body attributes:
+* origin: Origin point.
+* destinations: Destination points. Cannot be more than 200,000.
+* transport: Transportation type.
+* travelTime: Time limit;
+* country: Return the results that are within the specified country
+
+```ruby
+origin = {
+  lat: 51.508930,
+  lng: -0.131387,
+}
+
+destinations = [{
+  lat: 51.508824,
+  lng: -0.167093,
+}]
+
+response = client.time_filter_fast_proto_distance(
+  country: 'UK',
+  origin: origin,
+  destinations: destinations,
+  transport: 'driving+ferry',
+  traveltime: 7200
+)
+puts(response.body)
+```
+
+
 ### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts.
 Currently only supports United Kingdom.

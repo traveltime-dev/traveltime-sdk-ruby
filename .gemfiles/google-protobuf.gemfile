@@ -1,0 +1,3 @@
+eval_gemfile '../Gemfile'
+
+gem 'google-protobuf', '~> 3.21', '>= 3.21.9'

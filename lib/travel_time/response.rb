@@ -15,6 +15,14 @@ module TravelTime
       )
     end
 
+    def self.from_object_proto(response)
+      new(
+        status: response.status,
+        headers: response.headers,
+        body: ProtoUtils.decode_proto_response(response.body)
+      )
+    end
+
     def self.from_hash(response)
       new(
         status: response[:status],

@@ -2,13 +2,14 @@
 
 require 'faraday'
 require 'travel_time/middleware/authentication'
+require 'travel_time/middleware/proto'
 
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
   class Client # rubocop:disable Metrics/ClassLength
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
 
-    attr_reader :connection
+    attr_reader :connection, :proto_connection
 
     def initialize
       @connection = Faraday.new(API_BASE_URL) do |f|
@@ -19,10 +20,25 @@ module TravelTime
         f.use TravelTime::Middleware::Authentication
         f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
       end
+
+      init_proto_connection
+    end
+
+    def init_proto_connection
+      @proto_connection = Faraday.new do |f|
+        f.use TravelTime::Middleware::ProtoMiddleware
+        f.response :raise_error if TravelTime.config.raise_on_failure
+        f.response :logger if TravelTime.config.enable_logging
+        f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
+      end
     end
 
     def unwrap(response)
       Response.from_object(response)
+    end
+
+    def unwrap_proto(response)
+      Response.from_object_proto(response)
     end
 
     def perform_request
@@ -31,6 +47,12 @@ module TravelTime
       raise TravelTime::Error.new(response: Response.from_hash(e.response)) if e.response
 
       raise TravelTime::Error.new(exception: e)
+    rescue StandardError => e
+      raise TravelTime::Error.new(exception: e)
+    end
+
+    def perform_request_proto
+      unwrap_proto(yield)
     rescue StandardError => e
       raise TravelTime::Error.new(exception: e)
     end
@@ -92,6 +114,24 @@ module TravelTime
         arrival_searches: arrival_searches
       }.compact
       perform_request { connection.post('time-filter/fast', payload) }
+    end
+
+    def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport, traveltime)
+      payload = ProtoUtils.encode_proto_message(message)
+      perform_request_proto do
+        proto_connection.post("http://proto.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}",
+                              payload)
+      end
+    end
+
+    def time_filter_fast_proto_distance(country:, origin:, destinations:, transport:, traveltime:)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport, traveltime, properties: [1])
+      payload = ProtoUtils.encode_proto_message(message)
+      perform_request_proto do
+        proto_connection.post("https://proto-with-distance.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}",
+                              payload)
+      end
     end
 
     def time_filter_postcodes(departure_searches: nil, arrival_searches: nil)
