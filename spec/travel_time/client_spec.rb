@@ -110,6 +110,15 @@ RSpec.describe TravelTime::Client do
       it_behaves_like 'an endpoint method'
     end
 
+    describe '#time_map_fast' do
+      subject(:response) { client.time_map_fast(arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}time-map/fast" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
     describe '#time_filter' do
       subject(:response) { client.time_filter(locations: []) }
 

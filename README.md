@@ -120,6 +120,43 @@ response = client.time_map(
 puts response.body
 ```
 
+### [Isochrones (Time Map) Fast](https://docs.traveltime.com/api/reference/isochrones-fast)
+A very fast version of Isochrone API. However, the request parameters are much more limited.
+
+```ruby
+require 'time'
+
+arrival_search = {
+  id: "public transport to Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "public_transport" },
+  arrival_time: Time.now.iso8601,
+  travel_time: 1800,
+}
+
+union = {
+  id: 'union of driving and public transport',
+  search_ids: ['public transport from Trafalgar Square', 'public transport to Trafalgar Square']
+}
+intersection = {
+  id: 'intersection of driving and public transport',
+  search_ids: ['public transport from Trafalgar Square', 'public transport to Trafalgar Square']
+}
+
+response = client.time_map_fast(
+  arrival_searches: {
+    one_to_many: [arrival_search]
+  }, 
+  unions: [union], 
+  intersections: [intersection]
+)
+
+puts response.body
+```
+
 ### [Distance Matrix (Time Filter)](https://traveltime.com/docs/api/reference/distance-matrix)
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 Find out travel times, distances and costs between an origin and up to 2,000 destination points.

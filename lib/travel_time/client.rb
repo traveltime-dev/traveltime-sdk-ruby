@@ -74,7 +74,7 @@ module TravelTime
         'format.exclude.country': exclude,
         limit: limit,
         'force.add.postcode': force_postcode,
-        bounds: bounds ? bounds.join(',') : nil
+        bounds: bounds&.join(',')
       }.compact
       perform_request { connection.get('geocoding/search', query) }
     end
@@ -97,6 +97,15 @@ module TravelTime
         intersections: intersections
       }.compact
       perform_request { connection.post('time-map', payload, { 'Accept' => format }) }
+    end
+
+    def time_map_fast(arrival_searches:, unions: nil, intersections: nil, format: nil)
+      payload = {
+        arrival_searches: arrival_searches,
+        unions: unions,
+        intersections: intersections
+      }.compact
+      perform_request { connection.post('time-map/fast', payload, { 'Accept' => format }) }
     end
 
     def time_filter(locations:, departure_searches: nil, arrival_searches: nil)
