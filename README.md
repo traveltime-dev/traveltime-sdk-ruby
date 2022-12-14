@@ -147,7 +147,9 @@ intersection = {
 }
 
 response = client.time_map_fast(
-  arrival_searches: [arrival_search], 
+  arrival_searches: {
+    one_to_many: [arrival_search]
+  }, 
   unions: [union], 
   intersections: [intersection]
 )
