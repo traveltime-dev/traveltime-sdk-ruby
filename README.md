@@ -137,21 +137,10 @@ arrival_search = {
   travel_time: 1800,
 }
 
-union = {
-  id: 'union of driving and public transport',
-  search_ids: ['public transport from Trafalgar Square', 'public transport to Trafalgar Square']
-}
-intersection = {
-  id: 'intersection of driving and public transport',
-  search_ids: ['public transport from Trafalgar Square', 'public transport to Trafalgar Square']
-}
-
 response = client.time_map_fast(
   arrival_searches: {
     one_to_many: [arrival_search]
-  }, 
-  unions: [union], 
-  intersections: [intersection]
+  },
 )
 
 puts response.body
