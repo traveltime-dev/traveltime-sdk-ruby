@@ -21,4 +21,11 @@ RSpec.describe TravelTime::Middleware::Authentication do
     expected = TravelTime.config.api_key
     expect(value).to eq(expected)
   end
+
+  it 'automatically adds User-Agent header' do
+    middleware.on_request(faraday_env)
+    value = faraday_env.request_headers[described_class::USER_AGENT]
+    expected = 'Travel Time Ruby SDK'
+    expect(value).to eq(expected)
+  end
 end

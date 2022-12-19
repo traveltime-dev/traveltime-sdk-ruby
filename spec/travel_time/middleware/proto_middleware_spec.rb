@@ -27,4 +27,11 @@ RSpec.describe TravelTime::Middleware::ProtoMiddleware do
     expected = 'application/octet-stream'
     expect(value).to eq(expected)
   end
+
+  it 'automatically adds User-Agent type header' do
+    middleware.on_request(faraday_env)
+    value = faraday_env.request_headers['User-Agent']
+    expected = 'Travel Time Ruby SDK'
+    expect(value).to eq(expected)
+  end
 end
