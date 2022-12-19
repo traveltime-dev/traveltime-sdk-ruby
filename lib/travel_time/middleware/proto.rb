@@ -13,6 +13,7 @@ module TravelTime
           "Basic #{Base64.encode64("#{TravelTime.config.application_id}:#{TravelTime.config.api_key}")}"
         env.request_headers['Content-Type'] = 'application/octet-stream'
         env.request_headers['Accept'] = 'application/octet-stream'
+        env.request_headers['User-Agent'] = 'Travel Time Ruby SDK'
       end
     end
   end
