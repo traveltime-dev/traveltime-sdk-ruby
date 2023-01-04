@@ -3,9 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/travel_time.svg)](https://rubygems.org/gems/travel_time)
 [![GitHub Actions CI](https://github.com/traveltime-dev/traveltime-sdk-ruby/workflows/CI/badge.svg)](https://github.com/traveltime-dev/traveltime-sdk-ruby/actions?query=workflow%3ACI)
 
-
-This open-source library allows you to access [TravelTime API](https://docs.traveltime.com/overview/introduction)
-endpoints.
+[Travel Time](https://docs.traveltime.com/api/overview/introduction) Ruby SDK helps users find locations by journey time rather than using ‘as the crow flies’ distance. Time-based searching gives users more opportunities for personalisation and delivers a more relevant search.
 
 ## Installation
 
@@ -30,7 +28,7 @@ In order to be able to call the API, you'll first need to set your Application I
 ```ruby
 TravelTime.configure do |config|
   config.application_id = '<your app id>'
-  config.api_key = '<your api key>'
+  config.api_key = '<your app key>'
 end
 ```
 
@@ -70,10 +68,15 @@ departure_search = {
 client.time_map(departure_searches: [departure_search])
 ```
 
-
 ### [Isochrones (Time Map)](https://traveltime.com/docs/api/reference/isochrones)
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 Find unions/intersections between different searches.
+
+Body attributes:
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+* unions: Define unions of shapes that are results of previously defined searches.
+* intersections: Define intersections of shapes that are results of previously defined searches.
 
 ```ruby
 require 'time'
@@ -133,7 +136,7 @@ arrival_search = {
     lng: -0.128050
   },
   transportation: { type: "public_transport" },
-  arrival_time: Time.now.iso8601,
+  arrival_time_period: 'weekday_morning',
   travel_time: 1800,
 }
 
@@ -149,6 +152,11 @@ puts response.body
 ### [Distance Matrix (Time Filter)](https://traveltime.com/docs/api/reference/distance-matrix)
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 Find out travel times, distances and costs between an origin and up to 2,000 destination points.
+
+Body attributes:
+* locations: Locations to use. Each location requires an id and lat/lng values
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches
 
 ```ruby
 require 'time'
@@ -209,6 +217,11 @@ puts response.body
 
 ### [Routes](https://traveltime.com/docs/api/reference/routes)
 Returns routing information between source and destinations.
+
+Body attributes:
+* locations: Locations to use. Each location requires an id and lat/lng values.
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
 
 ```ruby
 require 'time'
@@ -274,7 +287,7 @@ puts response.body
 ```
 
 ### [Time Filter (Fast)](https://traveltime.com/docs/api/reference/time-filter-fast)
-A very fast version of time_filter().
+A very fast version of `time_filter()`.
 However, the request parameters are much more limited.
 Currently only supports UK and Ireland.
 
@@ -336,7 +349,7 @@ response = client.time_filter_fast(
 puts response.body
 ```
 
-### [Time Filter (Fast) Proto](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
+### [Time Filter Fast (Proto)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
 A fast version of time filter communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
 
 The request parameters are much more limited and only travel time is returned. In addition, the results are only approximately correct (95% of the results are guaranteed to be within 5% of the routes returned by regular time filter).
@@ -346,9 +359,9 @@ This inflexibility comes with a benefit of faster response times (Over 5x faster
 Body attributes:
 * origin: Origin point.
 * destinations: Destination points. Cannot be more than 200,000.
+* country: Return the results that are within the specified country.
 * transport: Transportation type.
-* travelTime: Time limit;
-* country: Return the results that are within the specified country
+* traveltime: Time limit.
 
 ```ruby
 origin = {
@@ -371,39 +384,7 @@ response = client.time_filter_fast_proto(
 puts(response.body)
 ```
 
-### Time Filter (Fast) Proto Distance
-A version of `Time Filter (Fast) Proto` endpoint that also returns distance information. Request parameters are even more limited than `Time Filter (Fast) Proto`.
-
-This endpoint is not enabled by default, please [contact us](https://traveltime.com/contact-us) if you wish to obtain access. 
-
-Body attributes:
-* origin: Origin point.
-* destinations: Destination points. Cannot be more than 200,000.
-* transport: Transportation type.
-* travelTime: Time limit;
-* country: Return the results that are within the specified country
-
-```ruby
-origin = {
-  lat: 51.508930,
-  lng: -0.131387,
-}
-
-destinations = [{
-  lat: 51.508824,
-  lng: -0.167093,
-}]
-
-response = client.time_filter_fast_proto_distance(
-  country: 'UK',
-  origin: origin,
-  destinations: destinations,
-  transport: 'driving+ferry',
-  traveltime: 7200
-)
-puts(response.body)
-```
-
+The responses are in the form of a list where each position denotes either a travel time (in seconds) of a journey, or if negative that the journey from the origin to the destination point is impossible.
 
 ### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts.
