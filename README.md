@@ -136,7 +136,7 @@ arrival_search = {
     lng: -0.128050
   },
   transportation: { type: "public_transport" },
-  arrival_time: Time.now.iso8601,
+  arrival_time_period: 'weekday_morning',
   travel_time: 1800,
 }
 
@@ -361,7 +361,7 @@ Body attributes:
 * destinations: Destination points. Cannot be more than 200,000.
 * country: Return the results that are within the specified country.
 * transport: Transportation type.
-* travelTime: Time limit.
+* traveltime: Time limit.
 
 ```ruby
 origin = {
