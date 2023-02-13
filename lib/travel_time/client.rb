@@ -79,14 +79,12 @@ module TravelTime
       perform_request { connection.get('geocoding/search', query, { 'Accept-Language' => accept_language }) }
     end
 
-    def reverse_geocoding(lat:, lng:, within_country: nil, exclude: nil)
+    def reverse_geocoding(lat:, lng:, accept_language: nil)
       query = {
         lat: lat,
-        lng: lng,
-        'within.country': within_country,
-        'exclude.location.types': exclude
+        lng: lng
       }.compact
-      perform_request { connection.get('geocoding/reverse', query) }
+      perform_request { connection.get('geocoding/reverse', query, { 'Accept-Language' => accept_language }) }
     end
 
     def time_map(departure_searches: nil, arrival_searches: nil, unions: nil, intersections: nil, format: nil)
