@@ -69,7 +69,7 @@ module TravelTime
                   bounds: nil)
       query = {
         query: query,
-        'within.country': within_country,
+        'within.country': if within_country.class == Array; within_country.join(',') else within_country end,
         'format.name': format_name,
         'format.exclude.country': exclude,
         limit: limit,
