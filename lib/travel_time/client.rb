@@ -66,17 +66,17 @@ module TravelTime
     end
 
     def geocoding(query:, within_country: nil, format_name: nil, exclude: nil, limit: nil, force_postcode: nil,
-                  bounds: nil)
+                  bounds: nil, accept_language: nil)
       query = {
         query: query,
-        'within.country': if within_country.class == Array; within_country.join(',') else within_country end,
+        'within.country': within_country.is_a?(Array) ? within_country.join(',') : within_country,
         'format.name': format_name,
         'format.exclude.country': exclude,
         limit: limit,
         'force.add.postcode': force_postcode,
         bounds: bounds&.join(',')
       }.compact
-      perform_request { connection.get('geocoding/search', query) }
+      perform_request { connection.get('geocoding/search', query, { 'Accept-Language' => accept_language }) }
     end
 
     def reverse_geocoding(lat:, lng:, within_country: nil, exclude: nil)
