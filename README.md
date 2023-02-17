@@ -215,77 +215,6 @@ response = client.time_filter(
 puts response.body
 ```
 
-### [Routes](https://traveltime.com/docs/api/reference/routes)
-Returns routing information between source and destinations.
-
-Body attributes:
-* locations: Locations to use. Each location requires an id and lat/lng values.
-* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
-* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
-
-```ruby
-require 'time'
-
-locations = [{
-  id: 'London center',
-  coords: {
-    lat: 51.508930,
-    lng: -0.131387
-  }
-},
-{
-  id: 'Hyde Park',
-  coords: {
-    lat: 51.508824,
-    lng: -0.167093
-  }
-},
-{
-  id: 'ZSL London Zoo',
-  coords: {
-    lat: 51.536067,
-    lng: -0.153596
-  }
-}]
-
-departure_search = {
-  id: 'forward search example',
-  departure_location_id: 'London center',
-  arrival_location_ids: ['Hyde Park', 'ZSL London Zoo'],
-  transportation: {
-    type: 'bus'
-  },
-  departure_time: Time.now.iso8601,
-  travel_time: 1800,
-  properties: ['travel_time'],
-  range: {
-    enabled: true,
-    max_results: 3,
-    width: 600
-  }
-}
-
-arrival_search = {
-  id: 'backward search example',
-  departure_location_ids: ['Hyde Park', 'ZSL London Zoo'],
-  arrival_location_id: 'London center',
-  transportation: {
-    type: 'public_transport'
-  },
-  arrival_time: Time.now.iso8601,
-  travel_time: 1800,
-  properties: ['travel_time', 'distance', 'fares', 'route']
-}
-
-response = client.routes(
-  locations: locations,
-  departure_searches: [departure_search],
-  arrival_searches: [arrival_search]
-)
-
-puts response.body
-```
-
 ### [Time Filter (Fast)](https://traveltime.com/docs/api/reference/time-filter-fast)
 A very fast version of `time_filter()`.
 However, the request parameters are much more limited.
@@ -386,6 +315,126 @@ puts(response.body)
 
 The responses are in the form of a list where each position denotes either a travel time (in seconds) of a journey, or if negative that the journey from the origin to the destination point is impossible.
 
+### [Routes](https://traveltime.com/docs/api/reference/routes)
+Returns routing information between source and destinations.
+
+Body attributes:
+* locations: Locations to use. Each location requires an id and lat/lng values.
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+
+```ruby
+require 'time'
+
+locations = [{
+  id: 'London center',
+  coords: {
+    lat: 51.508930,
+    lng: -0.131387
+  }
+},
+{
+  id: 'Hyde Park',
+  coords: {
+    lat: 51.508824,
+    lng: -0.167093
+  }
+},
+{
+  id: 'ZSL London Zoo',
+  coords: {
+    lat: 51.536067,
+    lng: -0.153596
+  }
+}]
+
+departure_search = {
+  id: 'forward search example',
+  departure_location_id: 'London center',
+  arrival_location_ids: ['Hyde Park', 'ZSL London Zoo'],
+  transportation: {
+    type: 'bus'
+  },
+  departure_time: Time.now.iso8601,
+  travel_time: 1800,
+  properties: ['travel_time'],
+  range: {
+    enabled: true,
+    max_results: 3,
+    width: 600
+  }
+}
+
+arrival_search = {
+  id: 'backward search example',
+  departure_location_ids: ['Hyde Park', 'ZSL London Zoo'],
+  arrival_location_id: 'London center',
+  transportation: {
+    type: 'public_transport'
+  },
+  arrival_time: Time.now.iso8601,
+  travel_time: 1800,
+  properties: ['travel_time', 'distance', 'fares', 'route']
+}
+
+response = client.routes(
+  locations: locations,
+  departure_searches: [departure_search],
+  arrival_searches: [arrival_search]
+)
+
+puts response.body
+```
+
+### [Geocoding (Search)](https://traveltime.com/docs/api/reference/geocoding-search) 
+Match a query string to geographic coordinates.
+
+```ruby
+response = client.geocoding(query: 'London', within_country: 'GB')
+puts response.body
+```
+
+### [Reverse Geocoding](https://traveltime.com/docs/api/reference/geocoding-reverse)
+Attempt to match a latitude, longitude pair to an address.
+
+```ruby
+response = client.reverse_geocoding(lat: 51.506756, lng: -0.128050)
+puts response.body
+```
+
+### [Time Filter (Postcodes)](https://traveltime.com/docs/api/reference/postcode-search)
+Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
+Currently only supports United Kingdom.
+
+```ruby
+require 'time'
+
+departure_search = {
+  id: 'public transport from Trafalgar Square',
+  departure_time: Time.now.iso8601,
+  travel_time: 1800,
+  coords: { lat: 51.507609, lng: -0.128315 },
+  transportation: { type: 'public_transport' },
+  properties: ['travel_time', 'distance']
+}
+
+arrival_search = {
+  id: 'public transport to Trafalgar Square',
+  arrival_time: Time.now.iso8601,
+  travel_time: 1800,
+  coords: { lat: 51.507609, lng: -0.128315 },
+  transportation: { type: 'public_transport' },
+  properties: ['travel_time', 'distance']
+}
+
+response = client.time_filter_postcodes(
+  departure_searches: [departure_search], 
+  arrival_searches: [arrival_search]
+)
+
+puts response.body
+```
+
 ### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts.
 Currently only supports United Kingdom.
@@ -453,55 +502,6 @@ response = client.time_filter_postcode_sectors(
   arrival_searches: [arrival_search]
 )
 
-puts response.body
-```
-
-### [Time Filter (Postcodes)](https://traveltime.com/docs/api/reference/postcode-search)
-Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
-Currently only supports United Kingdom.
-
-```ruby
-require 'time'
-
-departure_search = {
-  id: 'public transport from Trafalgar Square',
-  departure_time: Time.now.iso8601,
-  travel_time: 1800,
-  coords: { lat: 51.507609, lng: -0.128315 },
-  transportation: { type: 'public_transport' },
-  properties: ['travel_time', 'distance']
-}
-
-arrival_search = {
-  id: 'public transport to Trafalgar Square',
-  arrival_time: Time.now.iso8601,
-  travel_time: 1800,
-  coords: { lat: 51.507609, lng: -0.128315 },
-  transportation: { type: 'public_transport' },
-  properties: ['travel_time', 'distance']
-}
-
-response = client.time_filter_postcodes(
-  departure_searches: [departure_search], 
-  arrival_searches: [arrival_search]
-)
-
-puts response.body
-```
-
-### [Geocoding (Search)](https://traveltime.com/docs/api/reference/geocoding-search) 
-Match a query string to geographic coordinates.
-
-```ruby
-response = client.geocoding(query: 'London', within_country: 'GB')
-puts response.body
-```
-
-### [Reverse Geocoding](https://traveltime.com/docs/api/reference/geocoding-reverse)
-Attempt to match a latitude, longitude pair to an address.
-
-```ruby
-response = client.reverse_geocoding(lat: 51.506756, lng: -0.128050)
 puts response.body
 ```
 
