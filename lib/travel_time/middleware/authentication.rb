@@ -14,7 +14,7 @@ module TravelTime
       def on_request(env)
         env.request_headers[APP_ID_HEADER] = TravelTime.config.application_id
         env.request_headers[API_KEY_HEADER] = TravelTime.config.api_key
-        env.request_headers[USER_AGENT] = 'Travel Time Ruby SDK'
+        env.request_headers[USER_AGENT] = "Travel Time Ruby SDK #{TravelTime::VERSION}"
       end
     end
   end
