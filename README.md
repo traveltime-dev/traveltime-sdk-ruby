@@ -68,6 +68,14 @@ departure_search = {
 client.time_map(departure_searches: [departure_search])
 ```
 
+### Rate Limiting
+
+You may specify an optional rate limit when initializing your client. The `rate_limit` parameter sets a cap on the number of requests that can be made to the API in 60 seconds. Requests are balanced at equal intervals.
+
+```ruby
+client = TravelTime::Client.new(rate_limit = 60)
+```
+
 ### [Isochrones (Time Map)](https://traveltime.com/docs/api/reference/isochrones)
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 Find unions/intersections between different searches.
