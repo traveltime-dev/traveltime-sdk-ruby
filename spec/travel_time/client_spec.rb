@@ -3,6 +3,7 @@
 RSpec.describe TravelTime::Client do
   let(:client) { described_class.new }
   let(:connection) { client.connection }
+  let(:rate_limit) { 10 }
 
   it 'defaults to API v4' do
     expect(described_class::API_BASE_URL).to end_with('v4/')
@@ -199,6 +200,30 @@ RSpec.describe TravelTime::Client do
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
+    end
+  end
+
+  describe 'Rate limiter' do
+    context 'when rate_limit is provided' do
+      let(:client) { described_class.new(rate_limit) }
+
+      it 'calls limit_method with correct params' do
+        allow(described_class).to receive(:limit_method)
+        client
+        expect(described_class).to have_received(:limit_method).with(:perform_request, balanced: true, rate: rate_limit)
+      end
+    end
+
+    context 'when rate_limit is not provided' do
+      let(:client) { described_class.new }
+
+      it 'does not call limit_method' do
+        allow(described_class).to receive(:limit_method)
+
+        client
+
+        expect(described_class).not_to have_received(:limit_method)
+      end
     end
   end
 end

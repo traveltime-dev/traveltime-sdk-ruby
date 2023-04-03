@@ -3,15 +3,28 @@
 require 'faraday'
 require 'travel_time/middleware/authentication'
 require 'travel_time/middleware/proto'
+require 'limiter'
 
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
   class Client # rubocop:disable Metrics/ClassLength
+    extend Limiter::Mixin
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
 
     attr_reader :connection, :proto_connection
 
-    def initialize
+    def initialize(rate_limit = nil)
+      init_connection
+      init_proto_connection
+
+      return unless rate_limit
+
+      %i[perform_request perform_request_proto].each do |method_name|
+        self.class.limit_method method_name, balanced: true, rate: rate_limit
+      end
+    end
+
+    def init_connection
       @connection = Faraday.new(API_BASE_URL) do |f|
         f.request :json
         f.response :raise_error if TravelTime.config.raise_on_failure
@@ -20,8 +33,6 @@ module TravelTime
         f.use TravelTime::Middleware::Authentication
         f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
       end
-
-      init_proto_connection
     end
 
     def init_proto_connection
