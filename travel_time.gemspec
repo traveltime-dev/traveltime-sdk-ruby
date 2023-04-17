@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby'
   spec.metadata['changelog_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby/releases'
 
-  spec.add_dependency 'dry-configurable', '~> 0.14.0'
+  spec.add_dependency 'dry-configurable', '< 2.0'
   spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
   spec.add_dependency 'google-protobuf', '>= 3.21', '< 3.21.9'
   spec.add_dependency 'ruby-limiter', '~> 2.2.2'
