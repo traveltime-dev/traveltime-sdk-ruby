@@ -15,11 +15,15 @@ gem 'travel_time'
 
 And then execute:
 
-    $ bundle install
+```bash
+$ bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install travel_time
+```bash
+$ gem install travel_time
+```
 
 ## Usage
 
