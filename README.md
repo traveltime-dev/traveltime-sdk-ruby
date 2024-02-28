@@ -230,7 +230,6 @@ puts response.body
 ### [Time Filter (Fast)](https://traveltime.com/docs/api/reference/time-filter-fast)
 A very fast version of `time_filter()`.
 However, the request parameters are much more limited.
-Currently only supports UK and Ireland.
 
 ```ruby
 locations = [
