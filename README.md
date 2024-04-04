@@ -27,8 +27,8 @@ In order to be able to call the API, you'll first need to set your Application I
 
 ```ruby
 TravelTime.configure do |config|
-  config.application_id = '<your app id>'
-  config.api_key = '<your app key>'
+  config.application_id = 'YOUR_APP_ID'
+  config.api_key = 'YOUR_APP_KEY'
 end
 ```
 
