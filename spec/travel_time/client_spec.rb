@@ -111,6 +111,15 @@ RSpec.describe TravelTime::Client do
       it_behaves_like 'an endpoint method'
     end
 
+    describe '#distance_map' do
+      subject(:response) { client.distance_map }
+
+      let(:url) { "#{described_class::API_BASE_URL}distance-map" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
     describe '#time_map_fast' do
       subject(:response) { client.time_map_fast(arrival_searches: []) }
 
