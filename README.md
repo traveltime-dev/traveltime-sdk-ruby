@@ -135,6 +135,64 @@ response = client.time_map(
 puts response.body
 ```
 
+### [Distance Map](https://docs.traveltime.com/api/reference/distance-map)
+Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
+Find unions/intersections between different searches.
+
+Body attributes:
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+* unions: Define unions of shapes that are results of previously defined searches.
+* intersections: Define intersections of shapes that are results of previously defined searches.
+
+```ruby
+require 'time'
+
+departure_search = {
+  id: "driving from Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "driving" },
+  departure_time: Time.now.iso8601,
+  travel_distance: 1800,
+}
+
+arrival_search = {
+  id: "cycling to Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "cycling" },
+  arrival_time: Time.now.iso8601,
+  travel_distance: 1800,
+  range: { enabled: true, width: 3600 }
+}
+
+union = {
+  id: 'union of driving and cycling',
+  search_ids: ['driving from Trafalgar Square', 'cycling to Trafalgar Square']
+}
+
+intersection = {
+  id: 'intersection of driving and cycling',
+  search_ids: ['driving from Trafalgar Square', 'cycling to Trafalgar Square']
+}
+
+client.hello_world
+
+response = client.distance_map(
+  departure_searches: [departure_search], 
+  arrival_searches: [arrival_search], 
+  unions: [union], 
+  intersections: [intersection]
+)
+
+puts response.body
+```
+
 ### [Isochrones (Time Map) Fast](https://docs.traveltime.com/api/reference/isochrones-fast)
 A very fast version of Isochrone API. However, the request parameters are much more limited.
 
