@@ -80,7 +80,7 @@ You may specify an optional rate limit when initializing your client. The `rate_
 client = TravelTime::Client.new(rate_limit = 60)
 ```
 
-### [Isochrones (Time Map)](https://traveltime.com/docs/api/reference/isochrones)
+### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 Find unions/intersections between different searches.
 
@@ -135,6 +135,62 @@ response = client.time_map(
 puts response.body
 ```
 
+### [Distance Map](https://docs.traveltime.com/api/reference/distance-map)
+Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
+Find unions/intersections between different searches.
+
+Body attributes:
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+* unions: Define unions of shapes that are results of previously defined searches.
+* intersections: Define intersections of shapes that are results of previously defined searches.
+
+```ruby
+require 'time'
+
+departure_search = {
+  id: "driving from Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "driving" },
+  departure_time: Time.now.iso8601,
+  travel_distance: 1800,
+}
+
+arrival_search = {
+  id: "cycling to Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "cycling" },
+  arrival_time: Time.now.iso8601,
+  travel_distance: 1800,
+  range: { enabled: true, width: 3600 }
+}
+
+union = {
+  id: 'union of driving and cycling',
+  search_ids: ['driving from Trafalgar Square', 'cycling to Trafalgar Square']
+}
+
+intersection = {
+  id: 'intersection of driving and cycling',
+  search_ids: ['driving from Trafalgar Square', 'cycling to Trafalgar Square']
+}
+
+response = client.distance_map(
+  departure_searches: [departure_search], 
+  arrival_searches: [arrival_search], 
+  unions: [union], 
+  intersections: [intersection]
+)
+
+puts response.body
+```
+
 ### [Isochrones (Time Map) Fast](https://docs.traveltime.com/api/reference/isochrones-fast)
 A very fast version of Isochrone API. However, the request parameters are much more limited.
 
@@ -161,7 +217,7 @@ response = client.time_map_fast(
 puts response.body
 ```
 
-### [Distance Matrix (Time Filter)](https://traveltime.com/docs/api/reference/distance-matrix)
+### [Distance Matrix (Time Filter)](https://docs.traveltime.com/api/reference/distance-matrix)
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 Find out travel times, distances and costs between an origin and up to 2,000 destination points.
 
@@ -227,7 +283,7 @@ response = client.time_filter(
 puts response.body
 ```
 
-### [Time Filter (Fast)](https://traveltime.com/docs/api/reference/time-filter-fast)
+### [Time Filter (Fast)](https://docs.traveltime.com/api/reference/time-filter-fast)
 A very fast version of `time_filter()`.
 However, the request parameters are much more limited.
 
@@ -326,7 +382,7 @@ puts(response.body)
 
 The responses are in the form of a list where each position denotes either a travel time (in seconds) of a journey, or if negative that the journey from the origin to the destination point is impossible.
 
-### [Routes](https://traveltime.com/docs/api/reference/routes)
+### [Routes](https://docs.traveltime.com/api/reference/routes)
 Returns routing information between source and destinations.
 
 Body attributes:
@@ -397,7 +453,7 @@ response = client.routes(
 puts response.body
 ```
 
-### [Geocoding (Search)](https://traveltime.com/docs/api/reference/geocoding-search) 
+### [Geocoding (Search)](https://docs.traveltime.com/api/reference/geocoding-search) 
 Match a query string to geographic coordinates.
 
 ```ruby
@@ -405,7 +461,7 @@ response = client.geocoding(query: 'London', within_country: 'GB')
 puts response.body
 ```
 
-### [Reverse Geocoding](https://traveltime.com/docs/api/reference/geocoding-reverse)
+### [Reverse Geocoding](https://docs.traveltime.com/api/reference/geocoding-reverse)
 Attempt to match a latitude, longitude pair to an address.
 
 ```ruby
@@ -413,7 +469,7 @@ response = client.reverse_geocoding(lat: 51.506756, lng: -0.128050)
 puts response.body
 ```
 
-### [Time Filter (Postcodes)](https://traveltime.com/docs/api/reference/postcode-search)
+### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
 Currently only supports United Kingdom.
 
@@ -446,7 +502,7 @@ response = client.time_filter_postcodes(
 puts response.body
 ```
 
-### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
+### [Time Filter (Postcode Districts)](https://docs.traveltime.com/api/reference/postcode-district-filter)
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts.
 Currently only supports United Kingdom.
 
@@ -481,7 +537,7 @@ response = client.time_filter_postcode_districts(
 puts response.body
 ```
 
-### [Time Filter (Postcode Sectors)](https://traveltime.com/docs/api/reference/postcode-sector-filter)
+### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
 Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors.
 Currently only supports United Kingdom.
 
@@ -516,7 +572,7 @@ response = client.time_filter_postcode_sectors(
 puts response.body
 ```
 
-### [Map Info](https://traveltime.com/docs/api/reference/map-info)
+### [Map Info](https://docs.traveltime.com/api/reference/map-info)
 Get information about currently supported countries.
 
 ```ruby
@@ -524,7 +580,7 @@ response = client.map_info
 puts response.body
 ```
 
-### [Supported Locations](https://traveltime.com/docs/api/reference/supported-locations)
+### [Supported Locations](https://docs.traveltime.com/api/reference/supported-locations)
 Find out what points are supported by the api.
 
 ```ruby
