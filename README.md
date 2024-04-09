@@ -181,8 +181,6 @@ intersection = {
   search_ids: ['driving from Trafalgar Square', 'cycling to Trafalgar Square']
 }
 
-client.hello_world
-
 response = client.distance_map(
   departure_searches: [departure_search], 
   arrival_searches: [arrival_search], 
