@@ -630,4 +630,4 @@ a GitHub Action which will push the `.gem` file to [rubygems.org](https://rubyge
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/traveltime-dev/travel_time.
+Bug reports and pull requests are welcome on GitHub at https://github.com/traveltime-dev/traveltime-sdk-ruby.
