@@ -625,13 +625,19 @@ puts response.body
 This is optional, but enables you not installing gems to system directories.
 
 1. Install RVM: https://rvm.io/
-2. For Ubuntu, check out: https://rvm.io/integration/gnome-terminal
+2. Optional gnome-terminal integration: https://rvm.io/integration/gnome-terminal
 3. Install and set up Ruby with RVM:
 ```shell
 rvm install ruby-3.2.2
 rvm alias create default ruby-3.2.2
 rvm use ruby-3.2.2
 rvm gemset create traveltime-sdk
+```
+
+### Start using RVM
+
+```shell
+rvm use default@traveltime-sdk
 ```
 
 ### Install dependencies
