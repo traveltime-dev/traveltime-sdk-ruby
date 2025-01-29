@@ -620,10 +620,37 @@ puts response.body
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can
-also run `bin/console` for an interactive prompt that will allow you to experiment.
+### Set up Ruby Version Manager
+
+This is optional, but enables you not installing gems to system directories.
+
+1. Install RVM: https://rvm.io/
+2. For Ubuntu, check out: https://rvm.io/integration/gnome-terminal
+3. Install and set up Ruby with RVM:
+```shell
+rvm install ruby-3.2.2
+rvm alias create default ruby-3.2.2
+rvm use ruby-3.2.2
+rvm gemset create traveltime-sdk
+```
+
+### Install dependencies
+
+Run `bin/setup` to install dependencies.
+
+### Run tests
+
+Run `rake spec` to run the tests.
+
+### Interactive prompt
+
+Run `bin/console` for an interactive prompt that will allow you to experiment.
+
+### Installing TravelTime gem
 
 To install this gem onto your local machine, run `bundle exec rake install`.
+
+### Release
 
 To release a new version, update the version number in `version.rb` and then create a GitHub release. This will trigger
 a GitHub Action which will push the `.gem` file to [rubygems.org](https://rubygems.org).
