@@ -1,6 +1,6 @@
-require:
-  - rubocop-packaging
+plugins:
   - rubocop-performance
+  - rubocop-packaging
   - rubocop-rake
   - rubocop-rspec
 
@@ -30,6 +30,4 @@ RSpec/MultipleMemoizedHelpers:
   Max: 10
 
 Metrics/ParameterLists:
-  Enabled: false
-RSpec/Rails/HaveHttpStatus:
   Enabled: false

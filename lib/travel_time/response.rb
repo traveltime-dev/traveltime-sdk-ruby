@@ -23,9 +23,7 @@ module TravelTime
       )
 
       # Only try to decode if it's a successful response
-      if resp.success?
-        resp.instance_variable_set(:@body, ProtoUtils.decode_proto_response(response.body))
-      end
+      resp.instance_variable_set(:@body, ProtoUtils.decode_proto_response(response.body)) if resp.success?
 
       resp
     end
