@@ -656,6 +656,26 @@ Run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
+### Updating proto files
+
+Ruby proto files are currently generated manually and pushed to the repo.
+
+If `.proto` files were changed, you can generate Ruby code like this:
+
+```bash
+# For example, if current dir = lib/travel_time/proto
+protoc --proto_path=source --ruby_out=v2 source/*.proto
+```
+
+After the generation, modify files that import `RequestsCommon` to use `require_relative` instead of `require` - 
+it currently will not work otherwise.
+
+This comment sums up the current open PRs and Issues on the `require` vs `require_relative` topic:
+https://github.com/grpc/grpc/issues/29027#issuecomment-1963075200
+
+Other solution could be using this plugin https://github.com/ruby-protobuf/protobuf, but that
+might require a larger rework.
+
 ### Release
 
 To release a new version, update the version number in `version.rb` and then create a GitHub release. This will trigger

@@ -16,16 +16,11 @@ module TravelTime
     end
 
     def self.from_object_proto(response)
-      resp = new(
+      new(
         status: response.status,
         headers: response.headers,
-        body: nil
+        body: response.success? ? ProtoUtils.decode_proto_response(response.body) : nil
       )
-
-      # Only try to decode if it's a successful response
-      resp.instance_variable_set(:@body, ProtoUtils.decode_proto_response(response.body)) if resp.success?
-
-      resp
     end
 
     def self.from_hash(response)
