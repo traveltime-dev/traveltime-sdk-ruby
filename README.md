@@ -673,7 +673,7 @@ it currently will not work otherwise.
 This comment sums up the current open PRs and Issues on the `require` vs `require_relative` topic:
 https://github.com/grpc/grpc/issues/29027#issuecomment-1963075200
 
-Other solution could be using this plugin https://github.com/ruby-protobuf/protobuf, but that
+Other solution could be using `ruby-protobuf` plugin (https://github.com/ruby-protobuf/protobuf/pull/377), but that
 might require a larger rework.
 
 ### Release
