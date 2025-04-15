@@ -665,10 +665,11 @@ If `.proto` files were changed, you can generate Ruby code like this:
 ```bash
 # For example, if current dir = lib/travel_time/proto
 protoc --proto_path=source --ruby_out=v2 source/*.proto
-```
 
-After the generation, modify files that import `RequestsCommon` to use `require_relative` instead of `require` - 
-it currently will not work otherwise.
+# After the generation, modify files that import `RequestsCommon` to use `require_relative` instead of `require`.
+# This command can be used
+find v2 -name "*_pb.rb" -exec sed -i 's/require \x27\(.*_pb\)\x27/require_relative \x27\1\x27/g' {} \;
+```
 
 This comment sums up the current open PRs and Issues on the `require` vs `require_relative` topic:
 https://github.com/grpc/grpc/issues/29027#issuecomment-1963075200
