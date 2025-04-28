@@ -11,7 +11,7 @@ AllCops:
   NewCops: enable
   Exclude: 
     - spec/*.rb
-    - lib/travel_time/proto/v2/*.rb
+    - lib/*_pb.rb # generated proto files
     - vendor/**/*
     - gemfiles/vendor/bundle/**/*
 

@@ -3,8 +3,7 @@
 
 require 'google/protobuf'
 
-# Modified from `require` to `require_relative` after generation
-require_relative 'RequestsCommon_pb'
+require 'RequestsCommon_pb'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("TimeFilterFastRequest.proto", :syntax => :proto3) do
