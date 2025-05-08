@@ -1,6 +1,6 @@
-require:
-  - rubocop-packaging
+plugins:
   - rubocop-performance
+  - rubocop-packaging
   - rubocop-rake
   - rubocop-rspec
 
@@ -11,7 +11,7 @@ AllCops:
   NewCops: enable
   Exclude: 
     - spec/*.rb
-    - lib/travel_time/proto/v2/*.rb
+    - lib/*_pb.rb # generated proto files
     - vendor/**/*
     - gemfiles/vendor/bundle/**/*
 
@@ -30,6 +30,4 @@ RSpec/MultipleMemoizedHelpers:
   Max: 10
 
 Metrics/ParameterLists:
-  Enabled: false
-RSpec/Rails/HaveHttpStatus:
   Enabled: false

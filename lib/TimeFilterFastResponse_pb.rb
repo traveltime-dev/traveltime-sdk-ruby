@@ -31,6 +31,9 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :SOURCE_OUT_OF_REACH, 10
       value :INTERLEAVED_DELTAS_INVALID_COORDINATE_PAIRS, 11
       value :DISTANCE_PROPERTY_NOT_SUPPORTED, 12
+      value :BOTH_MANY_TO_ONE_AND_ONE_TO_MANY_CANNOT_BE_SENT, 13
+      value :ONE_TO_MANY_OR_MANY_TO_ONE_MUST_NOT_BE_NULL, 14
+      value :INVALID_PROTO_REQUEST, 15
     end
   end
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'travel_time/proto/v2/RequestsCommon_pb'
-require 'travel_time/proto/v2/TimeFilterFastRequest_pb'
-require 'travel_time/proto/v2/TimeFilterFastResponse_pb'
+require 'RequestsCommon_pb'
+require 'TimeFilterFastRequest_pb'
+require 'TimeFilterFastResponse_pb'
 
 module TravelTime
   # Utilities for encoding/decoding protobuf requests

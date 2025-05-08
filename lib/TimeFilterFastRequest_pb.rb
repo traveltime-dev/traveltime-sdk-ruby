@@ -3,15 +3,24 @@
 
 require 'google/protobuf'
 
-require_relative 'RequestsCommon_pb'
+require 'RequestsCommon_pb'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("TimeFilterFastRequest.proto", :syntax => :proto3) do
     add_message "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest" do
       optional :oneToManyRequest, :message, 1, "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.OneToMany"
+      optional :manyToOneRequest, :message, 2, "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.ManyToOne"
     end
     add_message "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.OneToMany" do
       optional :departureLocation, :message, 1, "com.igeolise.traveltime.rabbitmq.requests.Coords"
+      repeated :locationDeltas, :sint32, 2
+      optional :transportation, :message, 3, "com.igeolise.traveltime.rabbitmq.requests.Transportation"
+      optional :arrivalTimePeriod, :enum, 4, "com.igeolise.traveltime.rabbitmq.requests.TimePeriod"
+      optional :travelTime, :sint32, 5
+      repeated :properties, :enum, 6, "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.Property"
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.ManyToOne" do
+      optional :arrivalLocation, :message, 1, "com.igeolise.traveltime.rabbitmq.requests.Coords"
       repeated :locationDeltas, :sint32, 2
       optional :transportation, :message, 3, "com.igeolise.traveltime.rabbitmq.requests.Transportation"
       optional :arrivalTimePeriod, :enum, 4, "com.igeolise.traveltime.rabbitmq.requests.TimePeriod"
@@ -32,6 +41,7 @@ module Com
         module Requests
           TimeFilterFastRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest").msgclass
           TimeFilterFastRequest::OneToMany = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.OneToMany").msgclass
+          TimeFilterFastRequest::ManyToOne = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.ManyToOne").msgclass
           TimeFilterFastRequest::Property = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimeFilterFastRequest.Property").enummodule
         end
       end

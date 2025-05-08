@@ -656,6 +656,16 @@ Run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
+### Updating proto files
+
+Ruby proto files are currently generated manually and pushed to the repo.
+
+If `.proto` files were changed, you can generate Ruby code like this:
+
+```bash
+# For example, if current dir is project root
+protoc --proto_path=lib/travel_time/proto/source --ruby_out=lib lib/travel_time/proto/source/*.proto
+
 ### Release
 
 To release a new version, update the version number in `version.rb` and then create a GitHub release. This will trigger

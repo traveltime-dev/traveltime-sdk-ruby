@@ -19,7 +19,7 @@ module TravelTime
       new(
         status: response.status,
         headers: response.headers,
-        body: ProtoUtils.decode_proto_response(response.body)
+        body: response.success? ? ProtoUtils.decode_proto_response(response.body) : nil
       )
     end
 
