@@ -56,7 +56,8 @@ module TravelTime
         @details = {}
       else
         @type = transport_input[:type]
-        @details = transport_input.except(:type)
+        # Ruvy 3.0+ has #except which is a bit simpler, but using #reject for v2.7
+        @details = transport_input.reject { |k, _| k == :type }
         validate_details!
       end
     end
