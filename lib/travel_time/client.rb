@@ -3,6 +3,7 @@
 require 'faraday'
 require 'travel_time/middleware/authentication'
 require 'travel_time/middleware/proto'
+require 'travel_time/transport'
 require 'limiter'
 
 module TravelTime
@@ -143,19 +144,21 @@ module TravelTime
     end
 
     def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:)
-      message = ProtoUtils.make_proto_message(origin, destinations, transport, traveltime)
+      transport_obj = Transport.new(transport)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime)
       payload = ProtoUtils.encode_proto_message(message)
       perform_request_proto do
-        proto_connection.post("http://proto.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}",
+        proto_connection.post("http://proto.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport_obj.url_name}",
                               payload)
       end
     end
 
     def time_filter_fast_proto_distance(country:, origin:, destinations:, transport:, traveltime:)
-      message = ProtoUtils.make_proto_message(origin, destinations, transport, traveltime, properties: [1])
+      transport_obj = Transport.new(transport)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime, properties: [1])
       payload = ProtoUtils.encode_proto_message(message)
       perform_request_proto do
-        proto_connection.post("https://proto-with-distance.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}",
+        proto_connection.post("https://proto-with-distance.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport_obj.url_name}",
                               payload)
       end
     end

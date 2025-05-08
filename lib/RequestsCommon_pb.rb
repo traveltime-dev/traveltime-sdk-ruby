@@ -11,6 +11,18 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "com.igeolise.traveltime.rabbitmq.requests.Transportation" do
       optional :type, :enum, 1, "com.igeolise.traveltime.rabbitmq.requests.TransportationType"
+      oneof :transportationDetails do
+        optional :publicTransport, :message, 2, "com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails"
+        optional :drivingAndPublicTransport, :message, 3, "com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails"
+      end
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails" do
+      optional :walkingTimeToStation, :uint32, 1
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails" do
+      optional :walkingTimeToStation, :uint32, 1
+      optional :drivingTimeToStation, :uint32, 2
+      optional :parkingTime, :sint32, 3
     end
     add_enum "com.igeolise.traveltime.rabbitmq.requests.TransportationType" do
       value :PUBLIC_TRANSPORT, 0
@@ -35,6 +47,8 @@ module Com
         module Requests
           Coords = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.Coords").msgclass
           Transportation = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.Transportation").msgclass
+          PublicTransportDetails = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails").msgclass
+          DrivingAndPublicTransportDetails = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails").msgclass
           TransportationType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TransportationType").enummodule
           TimePeriod = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimePeriod").enummodule
         end
