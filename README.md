@@ -356,7 +356,7 @@ Body attributes:
 * origin: Origin point.
 * destinations: Destination points. Cannot be more than 200,000.
 * country: Return the results that are within the specified country.
-* transport: Transportation type.
+* transport: Transportation type or object.
 * traveltime: Time limit.
 
 ```ruby
@@ -381,6 +381,54 @@ puts(response.body)
 ```
 
 The responses are in the form of a list where each position denotes either a travel time (in seconds) of a journey, or if negative that the journey from the origin to the destination point is impossible.
+
+When picking transportation mode for proto requests take note that some of the transportation modes
+support extra configuration parameters.
+
+#### Public Transport Details
+
+```ruby
+response = client.time_filter_fast_proto(
+  country: 'UK',
+  origin: origin,
+  destinations: destinations,
+  transport: {
+    type: 'pt',
+    walking_time_to_station: 900
+  },
+  traveltime: 7200
+)
+```
+
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be > 0 and <= 1800.
+
+#### Driving and Public Transport Details
+
+```ruby
+response = client.time_filter_fast_proto(
+  country: 'UK',
+  origin: origin,
+  destinations: destinations,
+  transport: {
+    type: 'driving+pt',
+    walking_time_to_station: 900,
+    driving_time_to_station: 900,
+    parking_time: 200,
+  },
+  traveltime: 7200
+)
+```
+
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit.
+  Optional. Must be > 0 and <= 1800.
+* `driving_time_to_station` - limits the possible duration of driving paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be > 0 and <= 1800.
+* `parking_time` - constant penalty to apply to simulate the difficulty of finding a parking spot.
+  Optional. Must be non-negative. Cannot be greater than the global travel time limit.
 
 ### [Routes](https://docs.traveltime.com/api/reference/routes)
 Returns routing information between source and destinations.
