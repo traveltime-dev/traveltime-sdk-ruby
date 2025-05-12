@@ -356,7 +356,7 @@ Body attributes:
 * origin: Origin point.
 * destinations: Destination points. Cannot be more than 200,000.
 * country: Return the results that are within the specified country.
-* transport: Transportation type or object.
+* transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
 
 ```ruby
