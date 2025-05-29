@@ -11,6 +11,24 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "com.igeolise.traveltime.rabbitmq.requests.Transportation" do
       optional :type, :enum, 1, "com.igeolise.traveltime.rabbitmq.requests.TransportationType"
+      oneof :transportationDetails do
+        optional :publicTransport, :message, 2, "com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails"
+        optional :drivingAndPublicTransport, :message, 3, "com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails"
+      end
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails" do
+      optional :walkingTimeToStation, :message, 1, "com.igeolise.traveltime.rabbitmq.requests.OptionalPositiveUInt32"
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails" do
+      optional :walkingTimeToStation, :message, 1, "com.igeolise.traveltime.rabbitmq.requests.OptionalPositiveUInt32"
+      optional :drivingTimeToStation, :message, 2, "com.igeolise.traveltime.rabbitmq.requests.OptionalPositiveUInt32"
+      optional :parkingTime, :message, 3, "com.igeolise.traveltime.rabbitmq.requests.OptionalNonNegativeUInt32"
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.OptionalPositiveUInt32" do
+      optional :value, :uint32, 1
+    end
+    add_message "com.igeolise.traveltime.rabbitmq.requests.OptionalNonNegativeUInt32" do
+      optional :value, :uint32, 1
     end
     add_enum "com.igeolise.traveltime.rabbitmq.requests.TransportationType" do
       value :PUBLIC_TRANSPORT, 0
@@ -25,6 +43,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_enum "com.igeolise.traveltime.rabbitmq.requests.TimePeriod" do
       value :WEEKDAY_MORNING, 0
     end
+    add_enum "com.igeolise.traveltime.rabbitmq.requests.CellPropertyType" do
+      value :MEAN, 0
+      value :MIN, 1
+      value :MAX, 2
+    end
   end
 end
 
@@ -35,8 +58,13 @@ module Com
         module Requests
           Coords = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.Coords").msgclass
           Transportation = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.Transportation").msgclass
+          PublicTransportDetails = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.PublicTransportDetails").msgclass
+          DrivingAndPublicTransportDetails = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.DrivingAndPublicTransportDetails").msgclass
+          OptionalPositiveUInt32 = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.OptionalPositiveUInt32").msgclass
+          OptionalNonNegativeUInt32 = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.OptionalNonNegativeUInt32").msgclass
           TransportationType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TransportationType").enummodule
           TimePeriod = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.TimePeriod").enummodule
+          CellPropertyType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("com.igeolise.traveltime.rabbitmq.requests.CellPropertyType").enummodule
         end
       end
     end

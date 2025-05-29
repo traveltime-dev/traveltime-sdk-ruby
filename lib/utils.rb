@@ -19,32 +19,22 @@ module TravelTime
       deltas.flatten
     end
 
-    def self.get_proto_transport_code(transport)
-      proto_transport_map = {
-        pt: 0,
-        'driving+ferry': 3,
-        'cycling+ferry': 6,
-        'walking+ferry': 7
-      }
-      proto_transport_map[transport.to_sym]
-    end
-
-    def self.make_one_to_many(origin, destinations, transport, traveltime, properties)
+    def self.make_one_to_many(origin, destinations, transport_obj, traveltime, properties)
+      transportation = Com::Igeolise::Traveltime::Rabbitmq::Requests::Transportation.new
+      transport_obj.apply_to_proto(transportation)
       Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::OneToMany.new(
         departureLocation: origin,
         locationDeltas: build_deltas(origin, destinations),
-        transportation: Com::Igeolise::Traveltime::Rabbitmq::Requests::Transportation.new(
-          { type: get_proto_transport_code(transport) }
-        ),
+        transportation: transportation,
         arrivalTimePeriod: 0,
         travelTime: traveltime,
         properties: properties
       )
     end
 
-    def self.make_proto_message(origin, destinations, transport, traveltime, properties: nil)
+    def self.make_proto_message(origin, destinations, transport_obj, traveltime, properties: nil)
       Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest.new(
-        oneToManyRequest: make_one_to_many(origin, destinations, transport, traveltime, properties)
+        oneToManyRequest: make_one_to_many(origin, destinations, transport_obj, traveltime, properties)
       )
     end
 
