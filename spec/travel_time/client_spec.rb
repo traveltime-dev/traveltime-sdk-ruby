@@ -155,7 +155,7 @@ RSpec.describe TravelTime::Client do
                                       traveltime: 0)
       end
 
-      let(:url) { "http://proto.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}" }
+      let(:url) { "http://proto.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport}" }
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
@@ -169,7 +169,8 @@ RSpec.describe TravelTime::Client do
                                                traveltime: 0)
       end
 
-      let(:url) { "https://proto-with-distance.api.traveltimeapp.com/api/v2/#{country}/time-filter/fast/#{transport}" }
+      # FIXME: proto-with-distance is longer used
+      let(:url) { "https://proto-with-distance.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport}" }
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
