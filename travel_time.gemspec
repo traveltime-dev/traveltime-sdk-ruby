@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-configurable', '< 2.0'
   spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
   spec.add_dependency 'google-protobuf', '~> 3.25', '>= 3.25.5'
-  spec.add_dependency 'ruby-limiter', '~> 2.2.2'
+  spec.add_dependency 'ruby-limiter', '~> 2.3.0'
 
   # Specify which files should be added to the gem when it is released.
   spec.files = Dir['{bin,lib}/**/*', 'LICENSE.md', 'Rakefile', 'README.md']
