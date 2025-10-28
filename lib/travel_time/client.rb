@@ -144,12 +144,12 @@ module TravelTime
       perform_request { connection.post('time-filter/fast', payload) }
     end
 
-    def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:, with_distance: false)
+    def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:, with_distance: false, request_type: ProtoUtils::ONE_TO_MANY)
       transport_obj = Transport.new(transport)
       properties = if with_distance
                      [Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::Property::DISTANCES]
                    end
-      message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime, properties: properties)
+      message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime, properties: properties, request_type: request_type)
       payload = ProtoUtils.encode_proto_message(message)
       perform_request_proto do
         proto_connection.post("http://proto.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport_obj.url_name}",

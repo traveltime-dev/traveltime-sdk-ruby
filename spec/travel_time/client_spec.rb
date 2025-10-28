@@ -168,6 +168,24 @@ RSpec.describe TravelTime::Client do
 
         it_behaves_like 'an endpoint method'
       end
+
+      context 'with many_to_one request_type' do
+        subject(:response) do
+          client.time_filter_fast_proto(country: country, origin: {}, destinations: {}, transport: transport,
+                                        traveltime: 0, request_type: TravelTime::ProtoUtils::MANY_TO_ONE)
+        end
+
+        it_behaves_like 'an endpoint method'
+      end
+
+      context 'with many_to_one and with_distance' do
+        subject(:response) do
+          client.time_filter_fast_proto(country: country, origin: {}, destinations: {}, transport: transport,
+                                        traveltime: 0, with_distance: true, request_type: TravelTime::ProtoUtils::MANY_TO_ONE)
+        end
+
+        it_behaves_like 'an endpoint method'
+      end
     end
 
     describe '#time_filter_postcodes' do
