@@ -145,7 +145,9 @@ module TravelTime
 
     def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:, with_distance: false)
       transport_obj = Transport.new(transport)
-      properties = with_distance ? [Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::Property::DISTANCES] : nil
+      properties = if with_distance
+                     [Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::Property::DISTANCES]
+                   end
       message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime, properties: properties)
       payload = ProtoUtils.encode_proto_message(message)
       perform_request_proto do

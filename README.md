@@ -372,18 +372,8 @@ response = client.time_filter_fast_proto(
   origin: origin,
   destinations: destinations,
   transport: 'driving+ferry',
-  traveltime: 7200
-)
-puts(response.body)
-
-# To also get distances:
-response = client.time_filter_fast_proto(
-  country: 'UK',
-  origin: origin,
-  destinations: destinations,
-  transport: 'driving+ferry',
   traveltime: 7200,
-  with_distance: true
+  with_distance: true # To also get distances, optional
 )
 puts(response.body)
 ```
