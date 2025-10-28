@@ -354,6 +354,7 @@ Body attributes:
 * country: Return the results that are within the specified country.
 * transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
+* with_distance: (Optional) If true, returns distances in addition to travel times.
 
 ```ruby
 origin = {
@@ -371,7 +372,8 @@ response = client.time_filter_fast_proto(
   origin: origin,
   destinations: destinations,
   transport: 'driving+ferry',
-  traveltime: 7200
+  traveltime: 7200,
+  with_distance: true # To also get distances, optional
 )
 puts(response.body)
 ```

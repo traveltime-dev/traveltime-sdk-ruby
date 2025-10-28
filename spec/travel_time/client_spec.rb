@@ -159,21 +159,15 @@ RSpec.describe TravelTime::Client do
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
-    end
 
-    describe '#time_filter_fast_proto_distance' do
-      country = 'uk'
-      transport = 'driving+ferry'
-      subject(:response) do
-        client.time_filter_fast_proto_distance(country: country, origin: {}, destinations: {}, transport: transport,
-                                               traveltime: 0)
+      context 'with with_distance parameter' do
+        subject(:response) do
+          client.time_filter_fast_proto(country: country, origin: {}, destinations: {}, transport: transport,
+                                        traveltime: 0, with_distance: true)
+        end
+
+        it_behaves_like 'an endpoint method'
       end
-
-      # FIXME: proto-with-distance is longer used
-      let(:url) { "https://proto-with-distance.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport}" }
-      let(:stub) { stub_request(:post, url) }
-
-      it_behaves_like 'an endpoint method'
     end
 
     describe '#time_filter_postcodes' do
