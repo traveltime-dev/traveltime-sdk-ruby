@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby'
   spec.metadata['changelog_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby/releases'
 
+  spec.add_dependency 'base64', '~> 0.3.0' # For ruby v3.4 and above
   spec.add_dependency 'dry-configurable', '< 2.0'
   spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
   spec.add_dependency 'google-protobuf', '~> 3.25', '>= 3.25.5'
