@@ -355,6 +355,10 @@ Body attributes:
 * transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
 * with_distance: (Optional) If true, returns distances in addition to travel times.
+* request_type: (Optional) Specifies the request type - either `TravelTime::ProtoUtils::ONE_TO_MANY` (default) or `TravelTime::ProtoUtils::MANY_TO_ONE`.
+
+#### One-to-Many (default)
+Search from a single origin to multiple destinations:
 
 ```ruby
 origin = {
@@ -374,6 +378,31 @@ response = client.time_filter_fast_proto(
   transport: 'driving+ferry',
   traveltime: 7200,
   with_distance: true # To also get distances, optional
+)
+puts(response.body)
+```
+
+#### Many-to-One
+Search from multiple origins to a single destination:
+
+```ruby
+arrival = {
+  lat: 51.508930,
+  lng: -0.131387,
+}
+
+origins = [
+  { lat: 51.508824, lng: -0.167093 },
+  { lat: 51.536067, lng: -0.153596 }
+]
+
+response = client.time_filter_fast_proto(
+  country: 'UK',
+  origin: arrival,              # arrival/destination point
+  destinations: origins,        # departure/origin points
+  transport: 'public_transport',
+  traveltime: 3600,
+  request_type: TravelTime::ProtoUtils::MANY_TO_ONE
 )
 puts(response.body)
 ```

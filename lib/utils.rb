@@ -49,13 +49,13 @@ module TravelTime
       )
     end
 
-    def self.make_proto_message(origin, destinations, transport_obj, traveltime, properties: nil, request_type: ONE_TO_MANY)
+    def self.make_proto_message(origin, destinations, transport_obj, traveltime, properties: nil, request_type: nil)
+      request_type ||= ONE_TO_MANY
       request = Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest.new
 
-      case request_type
-      when ONE_TO_MANY
+      if request_type == ONE_TO_MANY
         request.oneToManyRequest = make_one_to_many(origin, destinations, transport_obj, traveltime, properties)
-      when MANY_TO_ONE
+      elsif request_type == MANY_TO_ONE
         request.manyToOneRequest = make_many_to_one(origin, destinations, transport_obj, traveltime, properties)
       else
         raise ArgumentError, "Invalid request_type: #{request_type}. Must be ONE_TO_MANY or MANY_TO_ONE"
