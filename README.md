@@ -377,7 +377,8 @@ response = client.time_filter_fast_proto(
   destinations: destinations,
   transport: 'driving+ferry',
   traveltime: 7200,
-  with_distance: true # To also get distances, optional
+  with_distance: true, # To also get distances, optional
+  request_type: TravelTime::ProtoUtils::ONE_TO_MANY # Optional
 )
 puts(response.body)
 ```
