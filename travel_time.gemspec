@@ -12,16 +12,17 @@ Gem::Specification.new do |spec|
   spec.description = 'TravelTime SDK for Ruby programming language'
   spec.homepage = 'https://traveltime.com'
   spec.license = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 3.2.0')
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby'
   spec.metadata['changelog_uri'] = 'https://github.com/traveltime-dev/traveltime-sdk-ruby/releases'
 
+  spec.add_dependency 'base64', '~> 0.3.0' # For ruby v3.4 and above
   spec.add_dependency 'dry-configurable', '< 2.0'
   spec.add_dependency 'faraday', '>= 1.10', '< 3.0'
   spec.add_dependency 'google-protobuf', '~> 3.25', '>= 3.25.5'
-  spec.add_dependency 'ruby-limiter', '~> 2.2.2'
+  spec.add_dependency 'ruby-limiter', '~> 2.3.0'
 
   # Specify which files should be added to the gem when it is released.
   spec.files = Dir['{bin,lib}/**/*', 'LICENSE.md', 'Rakefile', 'README.md']

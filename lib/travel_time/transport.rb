@@ -56,8 +56,7 @@ module TravelTime
         @details = {}
       else
         @type = transport_input[:type]
-        # Ruby 3.0+ has #except which is a bit simpler, but using #reject for v2.7 compatibility
-        @details = transport_input.reject { |k, _| k == :type }
+        @details = transport_input.except(:type)
         validate_details!
       end
     end
