@@ -190,5 +190,52 @@ module TravelTime
       }.compact
       perform_request { connection.post('routes', payload) }
     end
+
+    def h3(resolution:, properties:, departure_searches: nil, arrival_searches: nil, unions: nil, intersections: nil)
+      payload = {
+        resolution: resolution,
+        properties: properties,
+        departure_searches: departure_searches,
+        arrival_searches: arrival_searches,
+        unions: unions,
+        intersections: intersections
+      }.compact
+      perform_request { connection.post('h3', payload) }
+    end
+
+    def h3_fast(resolution:, properties:, arrival_searches:, unions: nil, intersections: nil)
+      payload = {
+        resolution: resolution,
+        properties: properties,
+        arrival_searches: arrival_searches,
+        unions: unions,
+        intersections: intersections
+      }.compact
+      perform_request { connection.post('h3/fast', payload) }
+    end
+
+    def geohash(resolution:, properties:, departure_searches: nil, arrival_searches: nil, unions: nil,
+                intersections: nil)
+      payload = {
+        resolution: resolution,
+        properties: properties,
+        departure_searches: departure_searches,
+        arrival_searches: arrival_searches,
+        unions: unions,
+        intersections: intersections
+      }.compact
+      perform_request { connection.post('geohash', payload) }
+    end
+
+    def geohash_fast(resolution:, properties:, arrival_searches:, unions: nil, intersections: nil)
+      payload = {
+        resolution: resolution,
+        properties: properties,
+        arrival_searches: arrival_searches,
+        unions: unions,
+        intersections: intersections
+      }.compact
+      perform_request { connection.post('geohash/fast', payload) }
+    end
   end
 end

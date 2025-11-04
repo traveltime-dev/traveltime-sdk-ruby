@@ -224,6 +224,42 @@ RSpec.describe TravelTime::Client do
 
       it_behaves_like 'an endpoint method'
     end
+
+    describe '#h3' do
+      subject(:response) { client.h3(resolution: 5, properties: %w[min max mean]) }
+
+      let(:url) { "#{described_class::API_BASE_URL}h3" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#h3_fast' do
+      subject(:response) { client.h3_fast(resolution: 5, properties: %w[min max mean], arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}h3/fast" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#geohash' do
+      subject(:response) { client.geohash(resolution: 3, properties: %w[min max mean]) }
+
+      let(:url) { "#{described_class::API_BASE_URL}geohash" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
+
+    describe '#geohash_fast' do
+      subject(:response) { client.geohash_fast(resolution: 3, properties: %w[min max mean], arrival_searches: []) }
+
+      let(:url) { "#{described_class::API_BASE_URL}geohash/fast" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+    end
   end
 
   describe 'Rate limiter' do
