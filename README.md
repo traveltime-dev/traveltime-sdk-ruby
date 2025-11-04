@@ -530,13 +530,13 @@ puts response.body
 ```
 
 ### [H3](https://docs.traveltime.com/api/reference/h3)
-Calculate the travel times to all H3 cells within a travel time catchment area. Returns the max, min, and mean travel time for each H3 cell.
+Returns travel time statistics for H3 cells in catchment areas.
 
 Body attributes:
-* resolution: H3 resolution level (1-9, higher = more granular cells).
+* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time` #TODO add link to docs).
 * properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
-* departure_searches: Departure-based searches with specific departure times. You can define a maximum of 10 searches.
-* arrival_searches: Arrival-based searches with specific arrival times. You can define a maximum of 10 searches.
+* departure_searches: Departure-based searches with specific departure times.
+* arrival_searches: Arrival-based searches with specific arrival times.
 * unions: Union operations combining multiple search results.
 * intersections: Intersection operations finding overlapping areas.
 
@@ -570,12 +570,12 @@ puts response.body
 ```
 
 ### [H3 Fast](https://docs.traveltime.com/api/reference/h3-fast)
-A higher performance version of the H3 endpoint, but with fewer configurable parameters and more limited geographic coverage.
+A high performance version of the H3 endpoint. Returns travel time statistics for H3 cells in catchment areas.
 
 Body attributes:
-* resolution: H3 resolution level (1-9, higher = more granular cells).
+* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time` #TODO add link to docs).
 * properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
-* arrival_searches: Arrival-based searches with specific arrival times. You can define a maximum of 10 searches.
+* arrival_searches: Arrival-based searches with specific arrival times.
 * unions: Union operations combining multiple search results.
 * intersections: Intersection operations finding overlapping areas.
 
@@ -602,13 +602,13 @@ puts response.body
 ```
 
 ### [Geohash](https://docs.traveltime.com/api/reference/geohash)
-Calculate the travel times to all geohash cells within a travel time catchment area. Returns the max, min, and mean travel time for each geohash cell.
+Returns travel times to geohash cells within travel time catchment areas.
 
 Body attributes:
 * resolution: Geohash resolution level (1-6).
 * properties: Statistical properties to calculate for each geohash cell ('min', 'max', 'mean').
-* departure_searches: Departure-based searches with specific departure times. You can define a maximum of 10 searches.
-* arrival_searches: Arrival-based searches with specific arrival times. You can define a maximum of 10 searches.
+* departure_searches: Departure-based searches with specific departure times.
+* arrival_searches: Arrival-based searches with specific arrival time.
 * unions: Union operations combining multiple search results.
 * intersections: Intersection operations finding overlapping areas.
 
@@ -633,12 +633,12 @@ puts response.body
 ```
 
 ### [Geohash Fast](https://docs.traveltime.com/api/reference/geohash-fast)
-A higher performance version of the Geohash endpoint, but with fewer configurable parameters and more limited geographic coverage.
+A high performance version of the Geohash endpoint. Returns travel times to geohash cells within travel time catchment areas.
 
 Body attributes:
 * resolution: Geohash resolution level (1-6).
 * properties: Statistical properties to calculate for each geohash cell ('min', 'max', 'mean').
-* arrival_searches: Arrival-based searches with specific arrival times. You can define a maximum of 10 searches.
+* arrival_searches: Arrival-based searches with specific arrival times.
 * unions: Union operations combining multiple search results.
 * intersections: Intersection operations finding overlapping areas.
 
