@@ -533,7 +533,8 @@ puts response.body
 Returns travel time statistics for H3 cells in catchment areas.
 
 Body attributes:
-* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time` #TODO add link to docs).
+* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`.
+  Resolution table: https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
 * properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
 * departure_searches: Departure-based searches with specific departure times.
 * arrival_searches: Arrival-based searches with specific arrival times.
@@ -573,7 +574,8 @@ puts response.body
 A high performance version of the H3 endpoint. Returns travel time statistics for H3 cells in catchment areas.
 
 Body attributes:
-* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time` #TODO add link to docs).
+* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`.
+  Resolution table: https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
 * properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
 * arrival_searches: Arrival-based searches with specific arrival times.
 * unions: Union operations combining multiple search results.
