@@ -529,6 +529,143 @@ response = client.routes(
 puts response.body
 ```
 
+### [H3](https://docs.traveltime.com/api/reference/h3)
+Returns travel time statistics for H3 cells in catchment areas.
+
+Body attributes:
+* resolution: H3 resolution level (higher = more granular cells).
+  Limitations can be found [here](https://docs.traveltime.com/api/reference/h3#limits-of-resolution-and-traveltime).
+* properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
+* departure_searches: Departure-based searches with specific departure times.
+* arrival_searches: Arrival-based searches with specific arrival times.
+* unions: Union operations combining multiple search results.
+* intersections: Intersection operations finding overlapping areas.
+
+```ruby
+require 'time'
+
+departure_search = {
+  id: 'public transport from Trafalgar Square',
+  departure_time: Time.now.iso8601,
+  travel_time: 1800,
+  coords: { lat: 51.507609, lng: -0.128315 },
+  transportation: { type: 'public_transport' }
+}
+
+arrival_search = {
+  id: 'public transport to Hyde Park',
+  arrival_time: Time.now.iso8601,
+  travel_time: 1800,
+  coords: { lat: 51.508530, lng: -0.163925 },
+  transportation: { type: 'public_transport' }
+}
+
+response = client.h3(
+  resolution: 5,
+  properties: ['min', 'max', 'mean'],
+  departure_searches: [departure_search],
+  arrival_searches: [arrival_search]
+)
+
+puts response.body
+```
+
+### [H3 Fast](https://docs.traveltime.com/api/reference/h3-fast)
+A high performance version of the H3 endpoint. Returns travel time statistics for H3 cells in catchment areas.
+
+Body attributes:
+* resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`.
+  Limitations can be found [here](https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
+* properties: Statistical properties to calculate for each H3 cell ('min', 'max', 'mean').
+* arrival_searches: Arrival-based searches with specific arrival times.
+* unions: Union operations combining multiple search results.
+* intersections: Intersection operations finding overlapping areas.
+
+```ruby
+require 'time'
+
+arrival_search = {
+  one_to_many: [{
+    id: 'public transport from Trafalgar Square',
+    arrival_time_period: 'weekday_morning',
+    travel_time: 1800,
+    coords: { lat: 51.507609, lng: -0.128315 },
+    transportation: { type: 'public_transport' }
+  }]
+}
+
+response = client.h3_fast(
+  resolution: 5,
+  properties: ['min', 'max', 'mean'],
+  arrival_searches: arrival_search
+)
+
+puts response.body
+```
+
+### [Geohash](https://docs.traveltime.com/api/reference/geohash)
+Returns travel times to geohash cells within travel time catchment areas.
+
+Body attributes:
+* resolution: Geohash resolution level (1-6).
+* properties: Statistical properties to calculate for each geohash cell ('min', 'max', 'mean').
+* departure_searches: Departure-based searches with specific departure times.
+* arrival_searches: Arrival-based searches with specific arrival time.
+* unions: Union operations combining multiple search results.
+* intersections: Intersection operations finding overlapping areas.
+
+```ruby
+require 'time'
+
+departure_search = {
+  id: 'public transport from Trafalgar Square',
+  departure_time: Time.now.iso8601,
+  travel_time: 1800,
+  coords: { lat: 51.507609, lng: -0.128315 },
+  transportation: { type: 'public_transport' }
+}
+
+response = client.geohash(
+  resolution: 3,
+  properties: ['min', 'max', 'mean'],
+  departure_searches: [departure_search]
+)
+
+puts response.body
+```
+
+### [Geohash Fast](https://docs.traveltime.com/api/reference/geohash-fast)
+A high performance version of the Geohash endpoint. Returns travel times to geohash cells within travel time catchment areas.
+
+Body attributes:
+* resolution: Geohash resolution level (1-6).
+* properties: Statistical properties to calculate for each geohash cell ('min', 'max', 'mean').
+* arrival_searches: Arrival-based searches with specific arrival times.
+* unions: Union operations combining multiple search results.
+* intersections: Intersection operations finding overlapping areas.
+
+```ruby
+require 'time'
+
+arrival_search = {
+  one_to_many: [{
+    id: 'public transport from Trafalgar Square',
+    arrival_time_period: 'weekday_morning',
+    travel_time: 1800,
+    coords: { lat: 51.507609, lng: -0.128315 },
+    transportation: { type: 'public_transport' }
+  }]
+}
+
+response = client.geohash_fast(
+  resolution: 3,
+  properties: ['min', 'max', 'mean'],
+  arrival_searches: arrival_search
+)
+
+puts response.body
+```
+
 ### [Geocoding (Search)](https://docs.traveltime.com/api/reference/geocoding-search) 
 Match a query string to geographic coordinates.
 
