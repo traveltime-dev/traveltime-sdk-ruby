@@ -8,7 +8,8 @@ RSpec.describe TravelTime::Middleware::ProtoMiddleware do
       env.url = URI(url)
     end
   end
-  let(:middleware) { described_class.new }
+  let(:app) { instance_double(Faraday::Middleware) }
+  let(:middleware) { described_class.new(app) }
   let(:application_id) { 'a' * 40 }
   let(:api_key) { 'b' * 40 }
 

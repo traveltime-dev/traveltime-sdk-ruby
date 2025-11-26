@@ -6,7 +6,8 @@ RSpec.describe TravelTime::Middleware::Authentication do
       env.request_headers = Faraday::Utils::Headers.new
     end
   end
-  let(:middleware) { described_class.new }
+  let(:app) { instance_double(Faraday::Middleware) }
+  let(:middleware) { described_class.new(app) }
 
   it 'automatically fetches the application_id from the configuration and set it for the request' do
     middleware.on_request(faraday_env)
