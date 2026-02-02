@@ -36,6 +36,14 @@ module TravelTime
       end
     end
 
+    # Override configure to reinitialize connections after config changes
+    def configure
+      super.tap do
+        init_connection
+        init_proto_connection
+      end
+    end
+
     def effective_config
       has_instance_config = TravelTime.settings.any? do |s|
         value = config.public_send(s.name)
