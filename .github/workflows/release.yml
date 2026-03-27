@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           persist-credentials: false
 
       - name: Set up Ruby 3.3
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@319994f95fa847cf3fb3cd3dbe89f6dcde9f178f # v1.295.0
         with:
           ruby-version: '3.3'
 
       - name: Publish to RubyGems
-        uses: dawidd6/action-publish-gem@v1
+        uses: dawidd6/action-publish-gem@c4713bf1595e0686322d6cf6c1a1c0dcaeca55de # v1.2.0
         with:
           api_key: ${{secrets.RUBYGEMS_AUTH_TOKEN}}

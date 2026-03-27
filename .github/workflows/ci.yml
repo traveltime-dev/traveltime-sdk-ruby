@@ -17,12 +17,12 @@ jobs:
       BUNDLE_WITHOUT: development:test
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           persist-credentials: false
 
       - name: Set up Ruby 3.3
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@319994f95fa847cf3fb3cd3dbe89f6dcde9f178f # v1.295.0
         with:
           ruby-version: 3.3
           bundler-cache: true
@@ -42,10 +42,10 @@ jobs:
         gemfile: [ 'faraday-1', 'faraday-2' ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@319994f95fa847cf3fb3cd3dbe89f6dcde9f178f # v1.295.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
