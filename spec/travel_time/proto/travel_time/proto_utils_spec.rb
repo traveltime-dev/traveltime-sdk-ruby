@@ -104,4 +104,20 @@ RSpec.describe TravelTime::ProtoUtils do
       end
     end
   end
+
+  describe 'wire format' do
+    let(:origin) { { lat: 51.508930, lng: -0.131387 } }
+    let(:destinations) { [{ lat: 51.508824, lng: -0.167093 }] }
+
+    it 'encodes a request to stable wire bytes' do
+      message = utils.make_proto_message(origin, destinations, transport, traveltime)
+      expect(utils.encode_proto_message(message).unpack1('H*'))
+        .to eq('0a160a0a0d25094e4215508a06be120315e5371a0028a038')
+    end
+
+    it 'decodes a server response payload' do
+      bytes = ['12060a04b009880e'].pack('H*')
+      expect(utils.decode_proto_response(bytes)[:properties][:travelTimes]).to eq([600, 900])
+    end
+  end
 end

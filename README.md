@@ -878,6 +878,10 @@ If `.proto` files were changed, you can generate Ruby code like this:
 ```bash
 # For example, if current dir is project root
 protoc --proto_path=lib/travel_time/proto/source --ruby_out=lib lib/travel_time/proto/source/*.proto
+```
+
+Use protoc matching the oldest google-protobuf runtime the gemspec allows (protoc v25.x for the 3.25 floor):
+generated code only loads on runtimes from its own major version and the next one.
 
 ### Release
 
