@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby: [ '3.2', '3.3', '3.4' ]
-        gemfile: [ 'faraday-1', 'faraday-2' ]
+        gemfile: [ 'faraday-1', 'faraday-2', 'google-protobuf' ]
 
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
