@@ -3,6 +3,7 @@
 require 'simplecov'
 
 SimpleCov.start do
+  add_filter %r{^/lib/.*_pb\.rb$} # generated proto files
   minimum_coverage 100
   minimum_coverage_by_file 100
 end
