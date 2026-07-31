@@ -9,8 +9,19 @@ RSpec.describe TravelTime::Client do
     expect(described_class::API_BASE_URL).to end_with('v4/')
   end
 
+  it 'uses HTTPS for the proto endpoint' do
+    expect(described_class::PROTO_BASE_URL).to start_with('https://')
+  end
+
   it 'manages authentication' do
     expect(connection.builder.handlers).to include(TravelTime::Middleware::Authentication)
+  end
+
+  it 'attaches proto credentials after the logger, so they are never logged' do
+    TravelTime.config.enable_logging = true
+    handlers = described_class.new.proto_connection.builder.handlers
+    expect(handlers.index(TravelTime::Middleware::ProtoMiddleware))
+      .to be > handlers.index(Faraday::Response::Logger)
   end
 
   describe 'connection adapter' do
@@ -155,7 +166,7 @@ RSpec.describe TravelTime::Client do
                                       traveltime: 0)
       end
 
-      let(:url) { "http://proto.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport}" }
+      let(:url) { "#{described_class::PROTO_BASE_URL}#{country}/time-filter/fast/#{transport}" }
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
@@ -186,6 +197,42 @@ RSpec.describe TravelTime::Client do
         end
 
         it_behaves_like 'an endpoint method'
+      end
+
+      context 'with credentials configured' do
+        let(:authorized_stub) do
+          stub_request(:post, 'https://proto.api.traveltimeapp.com/api/v3/uk/time-filter/fast/pt')
+            .with(headers: { 'Authorization' => "Basic #{Base64.strict_encode64('app-id:api-key')}" })
+        end
+
+        before do
+          TravelTime.config.application_id = 'app-id'
+          TravelTime.config.api_key = 'api-key'
+          authorized_stub
+          response
+        end
+
+        it 'sends credentials over HTTPS to the proto host' do
+          expect(authorized_stub).to have_been_requested
+        end
+      end
+
+      context 'with a country that looks like an absolute url' do
+        let(:requested_hosts) { [] }
+
+        before do
+          hosts = requested_hosts
+          stub_request(:post, /.*/).to_return do |request|
+            hosts << request.uri.host
+            { status: 200 }
+          end
+          client.time_filter_fast_proto(country: 'https://attacker.example.com', origin: {}, destinations: {},
+                                        transport: transport, traveltime: 0)
+        end
+
+        it 'keeps the request on the proto host' do
+          expect(requested_hosts).to eq(['proto.api.traveltimeapp.com'])
+        end
       end
     end
 

@@ -12,6 +12,7 @@ module TravelTime
     extend Limiter::Mixin
 
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
+    PROTO_BASE_URL = 'https://proto.api.traveltimeapp.com/api/v3/'
 
     attr_reader :connection, :proto_connection
 
@@ -39,9 +40,9 @@ module TravelTime
 
     def init_proto_connection
       @proto_connection = Faraday.new do |f|
-        f.use TravelTime::Middleware::ProtoMiddleware
         f.response :raise_error if TravelTime.config.raise_on_failure
         f.response :logger if TravelTime.config.enable_logging
+        f.use TravelTime::Middleware::ProtoMiddleware
         f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
       end
     end
@@ -153,8 +154,7 @@ module TravelTime
                                               properties: properties, request_type: request_type)
       payload = ProtoUtils.encode_proto_message(message)
       perform_request_proto do
-        proto_connection.post("http://proto.api.traveltimeapp.com/api/v3/#{country}/time-filter/fast/#{transport_obj.url_name}",
-                              payload)
+        proto_connection.post("#{PROTO_BASE_URL}#{country}/time-filter/fast/#{transport_obj.url_name}", payload)
       end
     end
 
