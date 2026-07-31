@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe TravelTime::Transport do
+  expected_transports = {
+    pt: [0, 'pt'],
+    'driving+pt': [2, 'pt'],
+    driving: [1, 'driving'],
+    walking: [4, 'walking'],
+    cycling: [5, 'cycling'],
+    'driving+ferry': [3, 'driving+ferry'],
+    'cycling+ferry': [6, 'cycling+ferry'],
+    'walking+ferry': [7, 'walking+ferry']
+  }.freeze
+
   describe 'PROTO_TRANSPORT_MAP' do
-    {
-      pt: [0, 'pt'],
-      'driving+pt': [2, 'pt'],
-      driving: [1, 'driving'],
-      walking: [4, 'walking'],
-      cycling: [5, 'cycling'],
-      'driving+ferry': [3, 'driving+ferry'],
-      'cycling+ferry': [6, 'cycling+ferry'],
-      'walking+ferry': [7, 'walking+ferry']
-    }.each do |type, (code, url_name)|
+    it 'contains exactly the expected transport types' do
+      expect(described_class::PROTO_TRANSPORT_MAP.keys).to match_array(expected_transports.keys)
+    end
+
+    expected_transports.each do |type, (code, url_name)|
       it "maps #{type} to code #{code} and the #{url_name} endpoint" do
         expect(described_class.new(type.to_s)).to have_attributes(code: code, url_name: url_name)
       end
@@ -58,11 +64,9 @@ RSpec.describe TravelTime::Transport do
   end
 
   describe '#validate_details!' do
-    context 'with empty details' do
-      subject(:transport) { described_class.new('pt') }
-
-      it 'returns nil' do
-        expect { transport.validate_details! }.not_to raise_error
+    context 'with a details-free hash for a type that supports no details' do
+      it 'does not raise an error' do
+        expect { described_class.new(type: 'cycling') }.not_to raise_error
       end
     end
 

@@ -199,21 +199,23 @@ RSpec.describe TravelTime::Client do
         it_behaves_like 'an endpoint method'
       end
 
-      context 'with a transport whose url segment differs from its name' do
-        subject(:response) do
-          client.time_filter_fast_proto(country: country, origin: {}, destinations: {},
-                                        transport: 'driving+pt', traveltime: 0)
-        end
+      [['driving+pt', 'pt'], ['driving+ferry', 'driving+ferry']].each do |transport_name, segment|
+        context "with transport #{transport_name}" do
+          let(:requested_paths) { [] }
 
-        let(:mapped_stub) { stub_request(:post, "#{described_class::PROTO_BASE_URL}#{country}/time-filter/fast/pt") }
+          before do
+            paths = requested_paths
+            stub_request(:post, /.*/).to_return do |request|
+              paths << request.uri.path
+              { status: 200 }
+            end
+            client.time_filter_fast_proto(country: country, origin: {}, destinations: {},
+                                          transport: transport_name, traveltime: 0)
+          end
 
-        before do
-          mapped_stub
-          response
-        end
-
-        it 'posts to the mapped url segment' do
-          expect(mapped_stub).to have_been_requested
+          it "posts to the #{segment} url segment" do
+            expect(requested_paths).to eq(["/api/v3/#{country}/time-filter/fast/#{segment}"])
+          end
         end
       end
 
