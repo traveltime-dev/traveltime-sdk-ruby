@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe TravelTime::Transport do
-  let(:proto_utils) { TravelTime::ProtoUtils }
-  let(:transport_info) { { code: 0, url_name: 'pt' } }
-
-  before do
-    allow(proto_utils).to receive(:get_proto_transport_info).with(any_args).and_return(transport_info)
+  describe 'PROTO_TRANSPORT_MAP' do
+    {
+      pt: [0, 'pt'],
+      'driving+pt': [2, 'pt'],
+      driving: [1, 'driving'],
+      walking: [4, 'walking'],
+      cycling: [5, 'cycling'],
+      'driving+ferry': [3, 'driving+ferry'],
+      'cycling+ferry': [6, 'cycling+ferry'],
+      'walking+ferry': [7, 'walking+ferry']
+    }.each do |type, (code, url_name)|
+      it "maps #{type} to code #{code} and the #{url_name} endpoint" do
+        expect(described_class.new(type.to_s)).to have_attributes(code: code, url_name: url_name)
+      end
+    end
   end
 
   describe '#initialize' do
@@ -18,14 +28,6 @@ RSpec.describe TravelTime::Transport do
 
       it 'sets details to an empty hash' do
         expect(transport.details).to eq({})
-      end
-
-      it 'sets code from transport map' do
-        expect(transport.code).to eq(0)
-      end
-
-      it 'sets url_name from transport map' do
-        expect(transport.url_name).to eq('pt')
       end
     end
 
@@ -118,12 +120,6 @@ RSpec.describe TravelTime::Transport do
         }
       end
 
-      before do
-        allow(proto_utils).to receive(:get_proto_transport_info)
-          .with('driving+pt')
-          .and_return({ code: 2, url_name: 'driving+pt' })
-      end
-
       it 'does not raise an error' do
         expect { transport.validate_details! }.not_to raise_error
       end
@@ -187,12 +183,6 @@ RSpec.describe TravelTime::Transport do
 
       let(:result) { transport.apply_to_proto(transportation) }
 
-      before do
-        allow(proto_utils).to receive(:get_proto_transport_info)
-          .with('driving+pt')
-          .and_return({ code: 2, url_name: 'driving+pt' })
-      end
-
       it 'sets the type on transportation' do
         expect(result.type).to eq(:DRIVING_AND_PUBLIC_TRANSPORT)
       end
@@ -231,12 +221,6 @@ RSpec.describe TravelTime::Transport do
 
       let(:result) { transport.apply_to_proto(transportation) }
 
-      before do
-        allow(proto_utils).to receive(:get_proto_transport_info)
-          .with('driving+pt')
-          .and_return({ code: 2, url_name: 'driving+pt' })
-      end
-
       it 'sets DrivingAndPublicTransportDetails with the correct class' do
         expect(result.drivingAndPublicTransport).to be_a(driving_pt_details_class)
       end
@@ -263,12 +247,6 @@ RSpec.describe TravelTime::Transport do
 
       let(:result) { transport.apply_to_proto(transportation) }
 
-      before do
-        allow(proto_utils).to receive(:get_proto_transport_info)
-          .with('driving+pt')
-          .and_return({ code: 2, url_name: 'driving+pt' })
-      end
-
       it 'sets the type on transportation' do
         expect(result.type).to eq(:DRIVING_AND_PUBLIC_TRANSPORT)
       end
@@ -282,12 +260,6 @@ RSpec.describe TravelTime::Transport do
       subject(:transport) { described_class.new('driving+ferry') }
 
       let(:result) { transport.apply_to_proto(transportation) }
-
-      before do
-        allow(proto_utils).to receive(:get_proto_transport_info)
-          .with('driving+ferry')
-          .and_return({ code: 3, url_name: 'driving+ferry' })
-      end
 
       it 'sets the type on transportation' do
         expect(result.type).to eq(:DRIVING_AND_FERRY)

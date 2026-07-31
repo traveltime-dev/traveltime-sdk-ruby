@@ -199,6 +199,24 @@ RSpec.describe TravelTime::Client do
         it_behaves_like 'an endpoint method'
       end
 
+      context 'with a transport whose url segment differs from its name' do
+        subject(:response) do
+          client.time_filter_fast_proto(country: country, origin: {}, destinations: {},
+                                        transport: 'driving+pt', traveltime: 0)
+        end
+
+        let(:mapped_stub) { stub_request(:post, "#{described_class::PROTO_BASE_URL}#{country}/time-filter/fast/pt") }
+
+        before do
+          mapped_stub
+          response
+        end
+
+        it 'posts to the mapped url segment' do
+          expect(mapped_stub).to have_been_requested
+        end
+      end
+
       context 'with credentials configured' do
         let(:authorized_stub) do
           stub_request(:post, 'https://proto.api.traveltimeapp.com/api/v3/uk/time-filter/fast/pt')

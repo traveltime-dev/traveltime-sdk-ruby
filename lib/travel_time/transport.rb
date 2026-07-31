@@ -16,7 +16,7 @@ module TravelTime
       'driving+pt': { code: 2, url_name: 'pt' },
       driving: { code: 1, url_name: 'driving' },
       walking: { code: 4, url_name: 'walking' },
-      cycling: { code: 5, url_name: 'driving' },
+      cycling: { code: 5, url_name: 'cycling' },
       'driving+ferry': { code: 3, url_name: 'driving+ferry' },
       'cycling+ferry': { code: 6, url_name: 'cycling+ferry' },
       'walking+ferry': { code: 7, url_name: 'walking+ferry' }
