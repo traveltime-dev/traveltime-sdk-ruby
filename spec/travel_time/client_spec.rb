@@ -199,6 +199,26 @@ RSpec.describe TravelTime::Client do
         it_behaves_like 'an endpoint method'
       end
 
+      [['driving+pt', 'pt'], ['driving+ferry', 'driving+ferry']].each do |transport_name, segment|
+        context "with transport #{transport_name}" do
+          let(:requested_paths) { [] }
+
+          before do
+            paths = requested_paths
+            stub_request(:post, /.*/).to_return do |request|
+              paths << request.uri.path
+              { status: 200 }
+            end
+            client.time_filter_fast_proto(country: country, origin: {}, destinations: {},
+                                          transport: transport_name, traveltime: 0)
+          end
+
+          it "posts to the #{segment} url segment" do
+            expect(requested_paths).to eq(["/api/v3/#{country}/time-filter/fast/#{segment}"])
+          end
+        end
+      end
+
       context 'with credentials configured' do
         let(:authorized_stub) do
           stub_request(:post, 'https://proto.api.traveltimeapp.com/api/v3/uk/time-filter/fast/pt')
