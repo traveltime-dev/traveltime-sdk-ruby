@@ -2,6 +2,7 @@
 
 require 'faraday'
 require 'base64'
+require 'travel_time/error'
 
 module TravelTime
   module Middleware
@@ -9,8 +10,11 @@ module TravelTime
     # on each request. These are automatically taken from the `TravelTime.config`.
     class ProtoMiddleware < Faraday::Middleware
       def on_request(env)
+        scheme = env.url.scheme
+        raise TravelTime::Error, "Refusing to send credentials over #{scheme}" unless scheme == 'https'
+
         env.request_headers['Authorization'] =
-          "Basic #{Base64.encode64("#{TravelTime.config.application_id}:#{TravelTime.config.api_key}")}"
+          "Basic #{Base64.strict_encode64("#{TravelTime.config.application_id}:#{TravelTime.config.api_key}")}"
         env.request_headers['Content-Type'] = 'application/octet-stream'
         env.request_headers['Accept'] = 'application/octet-stream'
         env.request_headers['User-Agent'] = 'Travel Time Ruby SDK'
