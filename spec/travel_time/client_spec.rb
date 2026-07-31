@@ -84,6 +84,23 @@ RSpec.describe TravelTime::Client do
       let(:stub) { stub_request(:get, url) }
 
       it_behaves_like 'an endpoint method'
+
+      context 'when the API fails with a body that is not JSON' do
+        let(:raised) do
+          response
+        rescue TravelTime::Error => e
+          e
+        end
+
+        before do
+          TravelTime.config.raise_on_failure = true
+          stub.to_return(status: 502, body: '<html><meta name="description"></html>')
+        end
+
+        it 'keeps the underlying message rather than falling back to the default' do
+          expect(raised.message).to include('502')
+        end
+      end
     end
 
     describe '#supported_locations' do
@@ -170,6 +187,51 @@ RSpec.describe TravelTime::Client do
       let(:stub) { stub_request(:post, url) }
 
       it_behaves_like 'an endpoint method'
+
+      context 'when the proto API reports an error' do
+        let(:error_headers) do
+          { 'X-ERROR-CODE' => '8', 'X-ERROR-MESSAGE' => 'Unsupported transportation mode',
+            'X-ERROR-DETAILS' => 'contact support' }
+        end
+
+        before { stub.to_return(status: 400, headers: error_headers) }
+
+        it 'surfaces the error headers on the response' do
+          expect(response.body).to eq('error_code' => '8', 'description' => 'Unsupported transportation mode',
+                                      'additional_info' => 'contact support')
+        end
+
+        context 'with raise_on_failure enabled' do
+          let(:raised) do
+            response
+          rescue TravelTime::Error => e
+            e
+          end
+
+          before { TravelTime.config.raise_on_failure = true }
+
+          it 'raises an error carrying the server message' do
+            expect(raised.message).to eq('Unsupported transportation mode')
+          end
+        end
+      end
+
+      context 'when the proto API fails without error headers' do
+        let(:raised) do
+          response
+        rescue TravelTime::Error => e
+          e
+        end
+
+        before do
+          TravelTime.config.raise_on_failure = true
+          stub.to_return(status: 502)
+        end
+
+        it 'keeps the underlying message rather than falling back to the default' do
+          expect(raised.message).to include('502')
+        end
+      end
 
       context 'with with_distance parameter' do
         subject(:response) do

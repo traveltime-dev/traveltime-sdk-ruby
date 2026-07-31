@@ -15,7 +15,7 @@ module TravelTime
     end
 
     def parse_message(message)
-      message || wrapped_exception&.message || description || DEFAULT_MESSAGE
+      message || description || wrapped_exception&.message || DEFAULT_MESSAGE
     end
 
     def description
@@ -37,7 +37,8 @@ module TravelTime
     private
 
     def extract_from_body(field)
-      response&.body&.[](field)
+      body = response&.body
+      body[field] if body.is_a?(Hash)
     end
   end
 end
