@@ -58,7 +58,7 @@ module TravelTime
     def perform_request
       unwrap(yield)
     rescue Faraday::Error => e
-      raise TravelTime::Error.new(response: Response.from_hash(e.response)) if e.response
+      raise TravelTime::Error.new(response: Response.from_hash(e.response), exception: e) if e.response
 
       raise TravelTime::Error.new(exception: e)
     rescue StandardError => e
@@ -67,6 +67,10 @@ module TravelTime
 
     def perform_request_proto
       unwrap_proto(yield)
+    rescue Faraday::Error => e
+      raise TravelTime::Error.new(response: Response.from_proto_error(e.response), exception: e) if e.response
+
+      raise TravelTime::Error.new(exception: e)
     rescue StandardError => e
       raise TravelTime::Error.new(exception: e)
     end

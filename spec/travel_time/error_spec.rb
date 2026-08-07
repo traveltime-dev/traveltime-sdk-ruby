@@ -81,6 +81,19 @@ RSpec.describe TravelTime::Error do
     end
   end
 
+  context 'when the response body is not a hash' do
+    let(:html_response) { TravelTime::Response.new(status: 502, body: '<meta name="description">') }
+    let(:exception) { described_class.new(response: html_response, exception: Faraday::ServerError.new('status 502')) }
+
+    it 'does not mistake a substring of the body for a description' do
+      expect(exception.description).to be_nil
+    end
+
+    it 'falls back to the wrapped exception message' do
+      expect(exception.message).to eq('status 502')
+    end
+  end
+
   context 'when initialized with a message' do
     let(:exception) { described_class.new(message) }
 
