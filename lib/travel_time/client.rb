@@ -159,9 +159,8 @@ module TravelTime
       message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime,
                                               properties: properties, request_type: request_type)
       payload = ProtoUtils.encode_proto_message(message)
-      perform_request_proto do
-        proto_connection.post("#{PROTO_BASE_URL}#{country}/time-filter/fast/#{transport_obj.url_name}", payload)
-      end
+      path = "#{PROTO_BASE_URL}#{country.to_s.downcase}/time-filter/fast/#{transport_obj.url_name}"
+      perform_request_proto { proto_connection.post(path, payload) }
     end
 
     def time_filter_postcodes(departure_searches: nil, arrival_searches: nil)

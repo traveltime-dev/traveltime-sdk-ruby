@@ -299,6 +299,17 @@ RSpec.describe TravelTime::Client do
         end
       end
 
+      context 'with an uppercase country' do
+        before do
+          client.time_filter_fast_proto(country: country.upcase, origin: {}, destinations: {},
+                                        transport: transport, traveltime: 0)
+        end
+
+        it 'posts to the lowercase country segment' do
+          expect(stub).to have_been_requested
+        end
+      end
+
       context 'with a country that looks like an absolute url' do
         let(:requested_hosts) { [] }
 
