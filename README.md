@@ -193,11 +193,17 @@ puts response.body
 
 ### [Isochrones (Time Map) Fast](https://docs.traveltime.com/api/reference/isochrones-fast)
 A very fast version of Isochrone API. However, the request parameters are much more limited.
+Find unions/intersections between different searches.
+
+Body attributes:
+* arrival_searches: Searches based on arrival times, split into `one_to_many` and `many_to_one`.
+* unions: Define unions of shapes that are results of previously defined searches.
+* intersections: Define intersections of shapes that are results of previously defined searches.
 
 ```ruby
 require 'time'
 
-arrival_search = {
+public_transport_search = {
   id: "public transport to Trafalgar Square",
   coords: {
     lat: 51.506756,
@@ -208,10 +214,33 @@ arrival_search = {
   travel_time: 1800,
 }
 
+driving_search = {
+  id: "driving to Trafalgar Square",
+  coords: {
+    lat: 51.506756,
+    lng: -0.128050
+  },
+  transportation: { type: "driving" },
+  arrival_time_period: 'weekday_morning',
+  travel_time: 1800,
+}
+
+union = {
+  id: 'union of driving and public transport',
+  search_ids: ['driving to Trafalgar Square', 'public transport to Trafalgar Square']
+}
+
+intersection = {
+  id: 'intersection of driving and public transport',
+  search_ids: ['driving to Trafalgar Square', 'public transport to Trafalgar Square']
+}
+
 response = client.time_map_fast(
   arrival_searches: {
-    one_to_many: [arrival_search]
+    one_to_many: [public_transport_search, driving_search]
   },
+  unions: [union],
+  intersections: [intersection]
 )
 
 puts response.body
