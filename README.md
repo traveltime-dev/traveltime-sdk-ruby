@@ -401,7 +401,7 @@ destinations = [{
 }]
 
 response = client.time_filter_fast_proto(
-  country: 'UK',
+  country: 'uk',
   origin: origin,
   destinations: destinations,
   transport: 'driving+ferry',
@@ -427,10 +427,10 @@ origins = [
 ]
 
 response = client.time_filter_fast_proto(
-  country: 'UK',
+  country: 'uk',
   origin: arrival,              # arrival/destination point
   destinations: origins,        # departure/origin points
-  transport: 'public_transport',
+  transport: 'pt',
   traveltime: 3600,
   request_type: TravelTime::ProtoUtils::MANY_TO_ONE
 )
@@ -446,7 +446,7 @@ support extra configuration parameters.
 
 ```ruby
 response = client.time_filter_fast_proto(
-  country: 'UK',
+  country: 'uk',
   origin: origin,
   destinations: destinations,
   transport: {
@@ -465,7 +465,7 @@ response = client.time_filter_fast_proto(
 
 ```ruby
 response = client.time_filter_fast_proto(
-  country: 'UK',
+  country: 'uk',
   origin: origin,
   destinations: destinations,
   transport: {
