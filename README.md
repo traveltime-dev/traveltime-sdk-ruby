@@ -379,7 +379,7 @@ A fast version of time filter communicating using [protocol buffers](https://git
 
 Body attributes:
 * origin: Origin point.
-* destinations: Destination points. Cannot be more than 200,000.
+* destinations: Destination points. There is no fixed limit on the number of destinations; a request can be up to 10MB (around 2 million locations).
 * country: Return the results that are within the specified country.
 * transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
