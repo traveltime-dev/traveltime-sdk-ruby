@@ -77,7 +77,7 @@ client.time_map(departure_searches: [departure_search])
 You may specify an optional rate limit when initializing your client. The `rate_limit` parameter sets a cap on the number of requests that can be made to the API in 60 seconds. Requests are balanced at equal intervals.
 
 ```ruby
-client = TravelTime::Client.new(rate_limit = 60)
+client = TravelTime::Client.new(rate_limit = 120)
 ```
 
 ### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
@@ -379,7 +379,7 @@ A fast version of time filter communicating using [protocol buffers](https://git
 
 Body attributes:
 * origin: Origin point.
-* destinations: Destination points. Cannot be more than 200,000.
+* destinations: Destination points. There is no fixed limit on the number of destinations; a request can be up to 10MB (around 2 million locations).
 * country: Return the results that are within the specified country.
 * transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
