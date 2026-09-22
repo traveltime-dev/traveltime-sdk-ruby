@@ -42,6 +42,17 @@ After that, you can instantiate a client to initiate the API connection:
 client = TravelTime::Client.new
 ```
 
+A client can also be configured individually, for example to use separate credentials for
+batch operations. Settings not overridden in the block are inherited from the global
+configuration:
+
+```ruby
+batch_client = TravelTime::Client.new.configure do |config|
+  config.application_id = 'YOUR_BATCH_APP_ID'
+  config.api_key = 'YOUR_BATCH_APP_KEY'
+end
+```
+
 You can then use the client to call API endpoints:
 
 ```ruby

@@ -52,6 +52,20 @@ RSpec.describe TravelTime::Client do
       default_client = described_class.new
       expect(default_client.send(:effective_config)).to eq(TravelTime.config)
     end
+
+    it 'inherits settings that are not overridden from the global config' do
+      TravelTime.configure { |config| config.raise_on_failure = true }
+      client = described_class.new.configure { |config| config.application_id = 'CUSTOM_APP_ID' }
+      expect(client.send(:effective_config).raise_on_failure).to be(true)
+    ensure
+      TravelTime.configure { |config| config.raise_on_failure = false }
+    end
+
+    it 'rebuilds the connections when configured' do
+      client = described_class.new
+      expect { client.configure { |config| config.api_key = 'CUSTOM_KEY' } }
+        .to change(client, :connection).and change(client, :proto_connection)
+    end
   end
 
   describe 'connection adapter' do

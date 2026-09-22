@@ -36,21 +36,28 @@ module TravelTime
       end
     end
 
-    # Override configure to reinitialize connections after config changes
+    # Instance configuration starts as a copy of the global config, so settings not
+    # overridden in the block keep their globally configured values. Connections are
+    # rebuilt afterwards so the new config takes effect.
     def configure
+      inherit_global_config unless @instance_configured
       super.tap do
+        @instance_configured = true
         init_connection
         init_proto_connection
       end
     end
 
     def effective_config
-      has_instance_config = TravelTime.settings.any? do |s|
-        value = config.public_send(s.name)
-        s.default.nil? ? !value.nil? : value != s.default
-      end
-      has_instance_config ? config : TravelTime.config
+      @instance_configured ? config : TravelTime.config
     end
+
+    def inherit_global_config
+      TravelTime.settings.each do |s|
+        config.public_send(:"#{s.name}=", TravelTime.config.public_send(s.name))
+      end
+    end
+    private :inherit_global_config
 
     def init_connection
       cfg = effective_config
