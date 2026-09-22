@@ -395,6 +395,7 @@ Body attributes:
 * transport: Transportation type (string) or Transportation object.
 * traveltime: Time limit.
 * with_distance: (Optional) If true, returns distances in addition to travel times.
+* with_fares: (Optional) If true, returns monthly public transport fares in addition to travel times.
 * request_type: (Optional) Specifies the request type - either `TravelTime::ProtoUtils::ONE_TO_MANY` (default) or `TravelTime::ProtoUtils::MANY_TO_ONE`.
 
 #### One-to-Many (default)

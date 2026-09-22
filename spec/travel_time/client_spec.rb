@@ -286,6 +286,15 @@ RSpec.describe TravelTime::Client do
         it_behaves_like 'an endpoint method'
       end
 
+      context 'with with_fares parameter' do
+        subject(:response) do
+          client.time_filter_fast_proto(country: country, origin: {}, destinations: {}, transport: transport,
+                                        traveltime: 0, with_fares: true, with_distance: true)
+        end
+
+        it_behaves_like 'an endpoint method'
+      end
+
       context 'with many_to_one request_type' do
         subject(:response) do
           client.time_filter_fast_proto(country: country, origin: {}, destinations: {}, transport: transport,
