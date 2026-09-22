@@ -81,6 +81,15 @@ module TravelTime
       end
     end
 
+    def proto_properties(with_fares, with_distance)
+      property_enum = Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::Property
+      properties = []
+      properties << property_enum::FARES if with_fares
+      properties << property_enum::DISTANCES if with_distance
+      properties.empty? ? nil : properties
+    end
+    private :proto_properties
+
     def unwrap(response)
       Response.from_object(response)
     end
@@ -186,10 +195,9 @@ module TravelTime
     end
 
     def time_filter_fast_proto(country:, origin:, destinations:, transport:, traveltime:, with_distance: false,
-                               request_type: nil)
+                               with_fares: false, request_type: nil)
       transport_obj = Transport.new(transport)
-      distance_prop = Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest::Property::DISTANCES
-      properties = with_distance ? [distance_prop] : nil
+      properties = proto_properties(with_fares, with_distance)
       message = ProtoUtils.make_proto_message(origin, destinations, transport_obj, traveltime,
                                               properties: properties, request_type: request_type)
       payload = ProtoUtils.encode_proto_message(message)
