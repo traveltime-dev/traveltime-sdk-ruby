@@ -41,7 +41,7 @@ RSpec.describe TravelTime::Middleware::ProtoMiddleware do
   it 'automatically adds User-Agent type header' do
     middleware.on_request(faraday_env)
     value = faraday_env.request_headers['User-Agent']
-    expected = 'Travel Time Ruby SDK'
+    expected = "Travel Time Ruby SDK #{TravelTime::VERSION}"
     expect(value).to eq(expected)
   end
 
