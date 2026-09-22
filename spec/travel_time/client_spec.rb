@@ -24,6 +24,50 @@ RSpec.describe TravelTime::Client do
       .to be > handlers.index(Faraday::Response::Logger)
   end
 
+  describe 'custom credentials' do
+    let(:custom_client) do
+      described_class.new.configure do |config|
+        config.application_id = 'CUSTOM_APP_ID'
+        config.api_key = 'CUSTOM_KEY'
+      end
+    end
+
+    it 'allows setting custom application_id' do
+      expect(custom_client.config.application_id).to eq('CUSTOM_APP_ID')
+    end
+
+    it 'allows setting custom api_key' do
+      expect(custom_client.config.api_key).to eq('CUSTOM_KEY')
+    end
+
+    it 'uses instance config when custom credentials are set' do
+      custom_client = described_class.new.configure do |config|
+        config.application_id = 'CUSTOM_APP_ID'
+        config.api_key = 'CUSTOM_KEY'
+      end
+      expect(custom_client.send(:effective_config)).to eq(custom_client.config)
+    end
+
+    it 'falls back to global config when no custom credentials are set' do
+      default_client = described_class.new
+      expect(default_client.send(:effective_config)).to eq(TravelTime.config)
+    end
+
+    it 'inherits settings that are not overridden from the global config' do
+      TravelTime.configure { |config| config.raise_on_failure = true }
+      client = described_class.new.configure { |config| config.application_id = 'CUSTOM_APP_ID' }
+      expect(client.send(:effective_config).raise_on_failure).to be(true)
+    ensure
+      TravelTime.configure { |config| config.raise_on_failure = false }
+    end
+
+    it 'rebuilds the connections when configured' do
+      client = described_class.new
+      expect { client.configure { |config| config.api_key = 'CUSTOM_KEY' } }
+        .to change(client, :connection).and change(client, :proto_connection)
+    end
+  end
+
   describe 'connection adapter' do
     context 'with default config' do
       let(:expected) { Faraday::Adapter.lookup_middleware(Faraday.default_adapter) }

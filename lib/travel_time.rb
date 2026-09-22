@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 require 'dry/configurable'
-require 'travel_time/client'
-require 'travel_time/error'
-require 'travel_time/response'
-require 'travel_time/version'
-require 'utils'
 
 # Main TravelTime module
 module TravelTime
@@ -20,3 +15,9 @@ module TravelTime
   setting :enable_logging, default: false
   setting :raise_on_failure, default: false
 end
+
+require 'travel_time/client'
+require 'travel_time/error'
+require 'travel_time/response'
+require 'travel_time/version'
+require 'utils'

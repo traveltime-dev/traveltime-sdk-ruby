@@ -6,7 +6,8 @@ RSpec.describe TravelTime::Middleware::Authentication do
       env.request_headers = Faraday::Utils::Headers.new
     end
   end
-  let(:middleware) { described_class.new }
+  let(:app) { instance_double(Faraday::Middleware) }
+  let(:middleware) { described_class.new(app) }
 
   it 'automatically fetches the application_id from the configuration and set it for the request' do
     middleware.on_request(faraday_env)
@@ -20,6 +21,26 @@ RSpec.describe TravelTime::Middleware::Authentication do
     value = faraday_env.request_headers[described_class::API_KEY_HEADER]
     expected = TravelTime.config.api_key
     expect(value).to eq(expected)
+  end
+
+  describe 'with an injected config' do
+    let(:custom_config) do
+      TravelTime::Client.new.configure do |config|
+        config.application_id = 'CUSTOM_APP_ID'
+        config.api_key = 'CUSTOM_KEY'
+      end.send(:effective_config)
+    end
+    let(:middleware) { described_class.new(app, config: custom_config) }
+
+    it 'uses the injected application_id' do
+      middleware.on_request(faraday_env)
+      expect(faraday_env.request_headers[described_class::APP_ID_HEADER]).to eq('CUSTOM_APP_ID')
+    end
+
+    it 'uses the injected api_key' do
+      middleware.on_request(faraday_env)
+      expect(faraday_env.request_headers[described_class::API_KEY_HEADER]).to eq('CUSTOM_KEY')
+    end
   end
 
   it 'automatically adds User-Agent header' do

@@ -9,10 +9,19 @@ require 'limiter'
 module TravelTime
   # The Client class provides the main interface to interact with the TravelTime API
   class Client # rubocop:disable Metrics/ClassLength
+    include Dry::Configurable
     extend Limiter::Mixin
 
     API_BASE_URL = 'https://api.traveltimeapp.com/v4/'
     PROTO_BASE_URL = 'https://proto.api.traveltimeapp.com/api/v3/'
+
+    TravelTime.settings.each do |s|
+      if s.default.nil?
+        setting s.name
+      else
+        setting s.name, default: s.default
+      end
+    end
 
     attr_reader :connection, :proto_connection
 
@@ -27,23 +36,48 @@ module TravelTime
       end
     end
 
+    # Instance configuration starts as a copy of the global config, so settings not
+    # overridden in the block keep their globally configured values. Connections are
+    # rebuilt afterwards so the new config takes effect.
+    def configure
+      inherit_global_config unless @instance_configured
+      super.tap do
+        @instance_configured = true
+        init_connection
+        init_proto_connection
+      end
+    end
+
+    def effective_config
+      @instance_configured ? config : TravelTime.config
+    end
+
+    def inherit_global_config
+      TravelTime.settings.each do |s|
+        config.public_send(:"#{s.name}=", TravelTime.config.public_send(s.name))
+      end
+    end
+    private :inherit_global_config
+
     def init_connection
+      cfg = effective_config
       @connection = Faraday.new(API_BASE_URL) do |f|
         f.request :json
-        f.response :raise_error if TravelTime.config.raise_on_failure
-        f.response :logger if TravelTime.config.enable_logging
+        f.response :raise_error if cfg.raise_on_failure
+        f.response :logger if cfg.enable_logging
         f.response :json
-        f.use TravelTime::Middleware::Authentication
-        f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
+        f.use TravelTime::Middleware::Authentication, config: cfg
+        f.adapter cfg.http_adapter || Faraday.default_adapter
       end
     end
 
     def init_proto_connection
+      cfg = effective_config
       @proto_connection = Faraday.new do |f|
-        f.response :raise_error if TravelTime.config.raise_on_failure
-        f.response :logger if TravelTime.config.enable_logging
-        f.use TravelTime::Middleware::ProtoMiddleware
-        f.adapter TravelTime.config.http_adapter || Faraday.default_adapter
+        f.response :raise_error if cfg.raise_on_failure
+        f.response :logger if cfg.enable_logging
+        f.use TravelTime::Middleware::ProtoMiddleware, config: cfg
+        f.adapter cfg.http_adapter || Faraday.default_adapter
       end
     end
 
