@@ -94,8 +94,8 @@ module TravelTime
       Response.from_object(response)
     end
 
-    def unwrap_proto(response)
-      Response.from_object_proto(response)
+    def unwrap_proto(response, decoder: nil)
+      Response.from_object_proto(response, decoder: decoder)
     end
 
     def perform_request
@@ -108,8 +108,8 @@ module TravelTime
       raise TravelTime::Error.new(exception: e)
     end
 
-    def perform_request_proto
-      unwrap_proto(yield)
+    def perform_request_proto(decoder: nil)
+      unwrap_proto(yield, decoder: decoder)
     rescue Faraday::Error => e
       raise TravelTime::Error.new(response: Response.from_proto_error(e.response), exception: e) if e.response
 
@@ -204,6 +204,37 @@ module TravelTime
       path = "#{PROTO_BASE_URL}#{country.to_s.downcase}/time-filter/fast/#{transport_obj.url_name}"
       perform_request_proto { proto_connection.post(path, payload) }
     end
+
+    def geohash_fast_proto(country:, origin:, transport:, traveltime:, resolution:, properties: nil,
+                           remove_water_bodies: nil, request_type: nil)
+      requests = Com::Igeolise::Traveltime::Rabbitmq::Requests
+      responses = Com::Igeolise::Traveltime::Rabbitmq::Responses
+      cell_fast_proto(requests::GeohashFastRequest, responses::GeohashFastResponse, 'geohash', country, origin,
+                      transport, traveltime, resolution: resolution, properties: properties,
+                                             remove_water_bodies: remove_water_bodies, request_type: request_type)
+    end
+
+    def h3_fast_proto(country:, origin:, transport:, traveltime:, resolution:, properties: nil,
+                      remove_water_bodies: nil, request_type: nil)
+      requests = Com::Igeolise::Traveltime::Rabbitmq::Requests
+      responses = Com::Igeolise::Traveltime::Rabbitmq::Responses
+      response = cell_fast_proto(requests::H3FastRequest, responses::H3FastResponse, 'h3', country, origin,
+                                 transport, traveltime, resolution: resolution, properties: properties,
+                                                        remove_water_bodies: remove_water_bodies,
+                                                        request_type: request_type)
+      response.body.dig(:cells, :ids)&.map! { |id| format('%x', id) }
+      response
+    end
+
+    def cell_fast_proto(request_klass, response_klass, endpoint, country, origin, transport, traveltime, options)
+      transport_obj = Transport.new(transport)
+      message = ProtoUtils.make_cell_proto_message(request_klass, origin, transport_obj, traveltime, options)
+      payload = request_klass.encode(message)
+      path = "#{PROTO_BASE_URL}#{country.to_s.downcase}/#{endpoint}/fast/#{transport_obj.url_name}"
+      decoder = ->(body) { response_klass.decode(body).to_h }
+      perform_request_proto(decoder: decoder) { proto_connection.post(path, payload) }
+    end
+    private :cell_fast_proto
 
     def time_filter_postcodes(departure_searches: nil, arrival_searches: nil)
       payload = {

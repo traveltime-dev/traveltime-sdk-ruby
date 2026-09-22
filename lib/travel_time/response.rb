@@ -15,12 +15,13 @@ module TravelTime
       )
     end
 
-    def self.from_object_proto(response)
-      new(
-        status: response.status,
-        headers: response.headers,
-        body: response.success? ? ProtoUtils.decode_proto_response(response.body) : proto_error(response.headers)
-      )
+    def self.from_object_proto(response, decoder: nil)
+      body = if response.success?
+               decoder ? decoder.call(response.body) : ProtoUtils.decode_proto_response(response.body)
+             else
+               proto_error(response.headers)
+             end
+      new(status: response.status, headers: response.headers, body: body)
     end
 
     def self.from_hash(response)
