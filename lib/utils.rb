@@ -98,7 +98,7 @@ module TravelTime
       case request_type
       when ONE_TO_MANY then request_klass::OneToMany
       when MANY_TO_ONE then request_klass::ManyToOne
-      else raise ArgumentError, "Invalid request_type: #{request_type}"
+      else raise ArgumentError, "Invalid request_type: #{request_type}. Must be ONE_TO_MANY or MANY_TO_ONE"
       end
     end
 
@@ -117,6 +117,10 @@ module TravelTime
 
     def self.decode_proto_response(response)
       Com::Igeolise::Traveltime::Rabbitmq::Responses::TimeFilterFastResponse.decode(response).to_h
+    end
+
+    def self.cell_response_decoder(response_klass)
+      ->(response) { response_klass.decode(response).to_h }
     end
   end
 end

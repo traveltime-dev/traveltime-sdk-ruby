@@ -231,7 +231,7 @@ module TravelTime
       message = ProtoUtils.make_cell_proto_message(request_klass, origin, transport_obj, traveltime, options)
       payload = request_klass.encode(message)
       path = "#{PROTO_BASE_URL}#{country.to_s.downcase}/#{endpoint}/fast/#{transport_obj.url_name}"
-      decoder = ->(body) { response_klass.decode(body).to_h }
+      decoder = ProtoUtils.cell_response_decoder(response_klass)
       perform_request_proto(decoder: decoder) { proto_connection.post(path, payload) }
     end
     private :cell_fast_proto
