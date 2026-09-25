@@ -3,6 +3,10 @@
 require 'RequestsCommon_pb'
 require 'TimeFilterFastRequest_pb'
 require 'TimeFilterFastResponse_pb'
+require 'GeohashFastRequest_pb'
+require 'GeohashFastResponse_pb'
+require 'H3FastRequest_pb'
+require 'H3FastResponse_pb'
 
 module TravelTime
   # Utilities for encoding/decoding protobuf requests
@@ -68,8 +72,55 @@ module TravelTime
       Com::Igeolise::Traveltime::Rabbitmq::Requests::TimeFilterFastRequest.encode(message)
     end
 
+    def self.make_cell_search(search_klass, transport_obj, traveltime, options)
+      search = search_klass.new(
+        transportation: make_transportation(transport_obj),
+        arrivalTimePeriod: 0,
+        travelTime: traveltime,
+        resolution: options[:resolution],
+        properties: cell_properties(options[:properties])
+      )
+      search.removeWaterBodies = options[:remove_water_bodies] unless options[:remove_water_bodies].nil?
+      search
+    end
+
+    def self.make_transportation(transport_obj)
+      transportation = Com::Igeolise::Traveltime::Rabbitmq::Requests::Transportation.new
+      transport_obj.apply_to_proto(transportation)
+      transportation
+    end
+
+    def self.cell_properties(properties)
+      properties&.map { |property| property.to_s.upcase.to_sym }
+    end
+
+    def self.cell_search_klass(request_klass, request_type)
+      case request_type
+      when ONE_TO_MANY then request_klass::OneToMany
+      when MANY_TO_ONE then request_klass::ManyToOne
+      else raise ArgumentError, "Invalid request_type: #{request_type}. Must be ONE_TO_MANY or MANY_TO_ONE"
+      end
+    end
+
+    def self.make_cell_proto_message(request_klass, origin, transport_obj, traveltime, options)
+      request_type = options[:request_type] || ONE_TO_MANY
+      search = make_cell_search(cell_search_klass(request_klass, request_type), transport_obj, traveltime, options)
+      location = Com::Igeolise::Traveltime::Rabbitmq::Requests::Coords.new(origin)
+      if request_type == ONE_TO_MANY
+        search.departureLocation = location
+        request_klass.new(oneToManyRequest: search)
+      else
+        search.arrivalLocation = location
+        request_klass.new(manyToOneRequest: search)
+      end
+    end
+
     def self.decode_proto_response(response)
       Com::Igeolise::Traveltime::Rabbitmq::Responses::TimeFilterFastResponse.decode(response).to_h
+    end
+
+    def self.cell_response_decoder(response_klass)
+      ->(response) { response_klass.decode(response).to_h }
     end
   end
 end

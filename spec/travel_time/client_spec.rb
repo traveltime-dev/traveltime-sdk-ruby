@@ -382,6 +382,70 @@ RSpec.describe TravelTime::Client do
       end
     end
 
+    describe '#geohash_fast_proto' do
+      country = 'uk'
+      transport = 'pt'
+      subject(:response) do
+        client.geohash_fast_proto(country: country, origin: {}, transport: transport, traveltime: 0, resolution: 6)
+      end
+
+      let(:url) { "#{described_class::PROTO_BASE_URL}#{country}/geohash/fast/#{transport}" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+
+      context 'with properties, remove_water_bodies and many_to_one' do
+        subject(:response) do
+          client.geohash_fast_proto(country: country, origin: {}, transport: transport, traveltime: 0,
+                                    resolution: 6, properties: %i[min max],
+                                    remove_water_bodies: false,
+                                    request_type: TravelTime::ProtoUtils::MANY_TO_ONE)
+        end
+
+        it_behaves_like 'an endpoint method'
+      end
+
+      context 'with an invalid request_type' do
+        subject(:response) do
+          client.geohash_fast_proto(country: country, origin: {}, transport: transport, traveltime: 0,
+                                    resolution: 6, request_type: :sideways)
+        end
+
+        it 'raises an ArgumentError' do
+          expect { response }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
+    describe '#h3_fast_proto' do
+      country = 'uk'
+      transport = 'pt'
+      subject(:response) do
+        client.h3_fast_proto(country: country, origin: {}, transport: transport, traveltime: 0, resolution: 7)
+      end
+
+      let(:url) { "#{described_class::PROTO_BASE_URL}#{country}/h3/fast/#{transport}" }
+      let(:stub) { stub_request(:post, url) }
+
+      it_behaves_like 'an endpoint method'
+
+      context 'when the response contains cells' do
+        let(:encoded_body) do
+          Com::Igeolise::Traveltime::Rabbitmq::Responses::H3FastResponse.encode(
+            Com::Igeolise::Traveltime::Rabbitmq::Responses::H3FastResponse.new(
+              cells: { ids: [0x87194ad34ffffff], minTravelTimes: [600] }
+            )
+          )
+        end
+
+        before { stub.to_return(status: 200, body: encoded_body) }
+
+        it 'converts cell ids to their hexadecimal form' do
+          expect(response.body[:cells][:ids]).to eq(['87194ad34ffffff'])
+        end
+      end
+    end
+
     describe '#time_filter_postcodes' do
       subject(:response) { client.time_filter_postcodes(arrival_searches: []) }
 

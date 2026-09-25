@@ -499,6 +499,48 @@ response = client.time_filter_fast_proto(
 * `parking_time` - constant penalty to apply to simulate the difficulty of finding a parking spot.
   Optional. Must be non-negative. Cannot be greater than the global travel time limit.
 
+### [Geohash Fast (Proto)](https://docs.traveltime.com/api/start/geohash-proto)
+
+A fast version of geohash communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
+
+Body attributes:
+* country: Return the results that are within the specified country.
+* origin: Location of the search (departure point, or arrival point with `request_type: :many_to_one`).
+* transport: Transportation type, e.g. `{ type: 'driving+ferry' }`.
+* traveltime: Time limit.
+* resolution: Geohash resolution (cell size).
+* properties: (Optional) Travel time statistics to return — any of `:min`, `:max`, `:mean`.
+* remove_water_bodies: (Optional) When true, returned cells will not cover large nearby water bodies. Only sent when set.
+* request_type: (Optional) `:one_to_many` (default) or `:many_to_one`.
+
+```ruby
+response = client.geohash_fast_proto(
+  country: :uk,
+  origin: { lat: 51.508930, lng: -0.131387 },
+  transport: { type: 'driving+ferry' },
+  traveltime: 1800,
+  resolution: 6,
+  properties: [:min]
+)
+```
+
+### [H3 Fast (Proto)](https://docs.traveltime.com/api/start/h3-proto)
+
+A fast version of H3 communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
+Takes the same attributes as Geohash Fast (Proto) with an H3 `resolution`; cell ids are returned in their
+15-character hexadecimal form.
+
+```ruby
+response = client.h3_fast_proto(
+  country: :uk,
+  origin: { lat: 51.508930, lng: -0.131387 },
+  transport: { type: 'driving+ferry' },
+  traveltime: 1800,
+  resolution: 7,
+  properties: [:min]
+)
+```
+
 ### [Routes](https://docs.traveltime.com/api/reference/routes)
 Returns routing information between source and destinations.
 
