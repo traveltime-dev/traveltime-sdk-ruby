@@ -25,6 +25,7 @@ module TravelTime
     def initialize(transport_input)
       setup_type_and_details(transport_input)
       set_transport_info
+      validate_details!
     end
 
     # Validate that the provided details are allowed for this transport type
@@ -55,14 +56,14 @@ module TravelTime
         @type = transport_input
         @details = {}
       else
-        @type = transport_input[:type]
+        @type = transport_input[:type].to_s
         @details = transport_input.except(:type)
-        validate_details!
       end
     end
 
     def set_transport_info
-      info = PROTO_TRANSPORT_MAP[@type.to_sym]
+      info = PROTO_TRANSPORT_MAP[@type.to_sym] or
+        raise ArgumentError, "Unknown transport type '#{@type}'. Valid types: #{PROTO_TRANSPORT_MAP.keys.join(', ')}"
       @code = info[:code]
       @url_name = info[:url_name]
     end

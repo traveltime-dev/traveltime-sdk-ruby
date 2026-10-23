@@ -50,6 +50,14 @@ RSpec.describe TravelTime::Transport do
         expect(transport.details).to eq(walking_time_to_station: 600)
       end
 
+      context 'with a Symbol type' do
+        let(:transport_options) { { type: :pt, walking_time_to_station: 600 } }
+
+        it 'normalises type to a String' do
+          expect(transport.type).to eq('pt')
+        end
+      end
+
       context 'when validation fails' do
         let(:invalid_transport_options) { { type: 'pt', parking_time: 300 } } # Invalid detail for 'pt'
 
@@ -59,6 +67,22 @@ RSpec.describe TravelTime::Transport do
           expect { described_class.new(invalid_transport_options) }
             .to raise_error(ArgumentError, expected_message)
         end
+      end
+    end
+
+    context 'with an unknown type' do
+      let(:expected_message) do
+        "Unknown transport type 'public_transport'. Valid types: pt, driving+pt, driving, walking, cycling, " \
+          'driving+ferry, cycling+ferry, walking+ferry'
+      end
+
+      it 'raises an ArgumentError listing the valid types' do
+        expect { described_class.new('public_transport') }.to raise_error(ArgumentError, expected_message)
+      end
+
+      it 'reports the unknown type rather than unsupported details' do
+        expect { described_class.new(type: 'public_transport', walking_time_to_station: 600) }
+          .to raise_error(ArgumentError, expected_message)
       end
     end
   end
