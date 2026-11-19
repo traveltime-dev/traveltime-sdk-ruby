@@ -583,11 +583,15 @@ departure_search = {
   },
   departure_time: Time.now.iso8601,
   travel_time: 1800,
-  properties: ['travel_time'],
+  properties: ['travel_time', 'h3'],
   range: {
     enabled: true,
     max_results: 3,
     width: 600
+  },
+  h3: {
+    resolution: 9,
+    properties: ['mean']
   }
 }
 
